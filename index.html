@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
-    href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Lato:wght@400;500;600;700&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Lato:wght@400;500;600;700&family=Roboto:wght@300;400;500;600&display=swap"
     rel="stylesheet"
   />
   <link rel="stylesheet" href="tokens.css" />
@@ -561,29 +561,196 @@
     /* ---------- DESIGN SYSTEM ---------- */
     .design-row {
       display: flex;
-      gap: 20px;
-      align-items: flex-end;
+      gap: 32px;
+      align-items: flex-start;
       width: 100%;
-    }
-
-    .design-row__img {
-      width: 558px;
-      height: 343px;
-      border-radius: 8px;
-      object-fit: cover;
-      flex-shrink: 0;
     }
 
     .design-row__text {
       flex: 1;
+      min-width: 0;
       display: flex;
       flex-direction: column;
-      justify-content: center;
+      align-items: flex-start;
       gap: 20px;
       font-size: 16px;
       color: var(--text);
       letter-spacing: -0.08px;
       line-height: 1.34;
+    }
+
+    /* Live components rendered from the Tote design system */
+    .ds-mock {
+      display: grid;
+      grid-template-columns: 282.67px 262.05px;
+      column-gap: 15.28px;
+      align-items: start;
+      flex-shrink: 0;
+      font-family: "Roboto", sans-serif;
+      color: #222529;
+    }
+
+    .ds-mock__stack {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .ds-mock__field {
+      position: relative;
+      display: flex;
+      align-items: center;
+      height: 35.14px;
+      padding: 0 9.17px;
+      background: #fff;
+      border: 0.76px solid #362237;
+      border-radius: 6.11px;
+      filter: drop-shadow(0 1.53px 3.06px rgba(0, 0, 0, 0.08));
+      font-size: 12.22px;
+      font-weight: 500;
+    }
+
+    .ds-mock__field-label {
+      position: absolute;
+      left: 8.4px;
+      top: -7.64px;
+      padding: 0 3.06px;
+      background: #fff;
+      font-size: 9.17px;
+      font-weight: 600;
+      line-height: 13.75px;
+    }
+
+    .ds-mock__error {
+      display: flex;
+      align-items: center;
+      gap: 6.11px;
+      padding: 9.17px 12.22px;
+      background: #fef4f6;
+      border: 0.76px solid #fbc7d0;
+      border-radius: 6.11px;
+      filter: drop-shadow(0 1.53px 3.06px rgba(0, 0, 0, 0.08));
+      color: #cc1330;
+      font-size: 10.7px;
+      line-height: 15.28px;
+    }
+
+    .ds-mock__meeting {
+      display: flex;
+      flex-direction: column;
+      gap: 12.22px;
+      padding: 12.22px 0 12.22px 9.17px;
+      overflow: hidden;
+      background: #fff;
+      border: 0.76px solid #eaecef;
+      border-radius: 6.11px;
+      box-shadow: 0 1.53px 6.11px rgba(0, 0, 0, 0.08);
+    }
+
+    .ds-mock__meeting-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      padding-right: 9.17px;
+    }
+
+    .ds-mock__meeting-name {
+      display: flex;
+      align-items: center;
+      gap: 6.11px;
+      color: #221414;
+      font-size: 12.22px;
+      font-weight: 500;
+    }
+
+    .ds-mock__promo {
+      display: flex;
+      align-items: center;
+      gap: 3.06px;
+      height: 16.04px;
+      padding: 3.06px;
+      background: #fac83d;
+      border-radius: 3.06px;
+      color: #000;
+      font-size: 8.4px;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+
+    .ds-mock__chips {
+      display: flex;
+      align-items: center;
+      gap: 12.22px;
+      overflow: hidden;
+    }
+
+    .ds-mock__chip {
+      display: flex;
+      align-items: center;
+      gap: 3.06px;
+      flex-shrink: 0;
+      height: 25.98px;
+      padding: 6.11px 9.17px;
+      background: #fff;
+      border: 0.76px solid #eaecef;
+      border-radius: 6.11px;
+      color: #372337;
+      font-size: 10.7px;
+      line-height: 15.28px;
+      white-space: nowrap;
+    }
+
+    .ds-mock__chip--icon { gap: 6.11px; }
+    .ds-mock__chip-pool { color: #eb0024; }
+
+    .ds-mock__popup {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 12.22px;
+      padding: 18.34px 12.22px;
+      background: #fff;
+      border: 0.76px solid #eaecef;
+      border-radius: 12.22px;
+      filter: drop-shadow(0 1.53px 3.06px rgba(0, 0, 0, 0.08));
+      font-size: 10.7px;
+      font-weight: 300;
+      line-height: 15.28px;
+    }
+
+    .ds-mock__popup > p { align-self: stretch; }
+
+    .ds-mock__popup-title {
+      display: flex;
+      align-items: center;
+      gap: 6.11px;
+      align-self: stretch;
+      color: #cc1330;
+      font-size: 12.22px;
+      font-weight: 500;
+    }
+
+    .ds-mock__buttons {
+      display: flex;
+      gap: 12.22px;
+      align-self: stretch;
+    }
+
+    .ds-mock__button {
+      padding: 6.11px 9.17px;
+      border-radius: 6.11px;
+      font-weight: 400;
+      white-space: nowrap;
+    }
+
+    .ds-mock__button--secondary {
+      background: #fff;
+      border: 0.46px solid #362237;
+    }
+
+    .ds-mock__button--primary {
+      background: #eb0024;
+      color: #fff;
     }
 
     /* ---------- ABOUT ME ---------- */
@@ -717,11 +884,15 @@
       }
       .design-row {
         flex-direction: column;
-        align-items: stretch;
       }
-      .design-row__img {
+      .ds-mock {
+        grid-template-columns: minmax(0, 1fr);
         width: 100%;
-        height: auto;
+      }
+      .ds-mock__popup {
+        margin-left: 0;
+        grid-row: 2;
+        margin-top: 24px;
       }
       .about {
         flex-direction: column;
@@ -1078,22 +1249,73 @@
     <section class="section-block" aria-labelledby="design-system-title">
       <h2 id="design-system-title" class="section-title">Design System</h2>
       <div class="design-row">
-        <img
-          class="design-row__img"
-          src="images/index-closing-1.png"
-          alt="Tote design system – Grab 'n' Go section"
-        />
         <div class="design-row__text">
-          <p>I built and maintained the Tote's design system from the ground up.</p>
           <p>
-            Taking inspiration from the community and through sneakpeak, I
-            introduced a 'Grab 'n' Go section to make it easier for developers
-            to find key components.
+            Consolidated an existing design system of 537 components into a AI
+            driven system with 142 components.
           </p>
-          <p>
-            I created the typography, spacing variables, and colour scheme to
-            increase consistency across the UX team.
-          </p>
+          <a href="tote-design-system.html" class="btn btn--primary">
+            View Tote Design System
+            <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+              <path d="M7.5 5l5 5-5 5" stroke="#ffffff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </a>
+        </div>
+
+        <div class="ds-mock" aria-hidden="true">
+          <div class="ds-mock__stack">
+            <div class="ds-mock__field">
+              <span class="ds-mock__field-label">Full Name</span>
+              John Doe
+            </div>
+            <div class="ds-mock__error">
+              <img src="images/ds-icons/warning-error.svg" width="15.28" height="15.28" alt="" />
+              Minimum stake: £0.10
+            </div>
+            <div class="ds-mock__meeting">
+              <div class="ds-mock__meeting-head">
+                <span class="ds-mock__meeting-name">
+                  <img src="images/ds-icons/flag-uk.svg" width="11.46" height="7.64" alt="" />
+                  Uttoxeter
+                </span>
+                <span class="ds-mock__promo">
+                  <img src="images/ds-icons/money-back-chip.svg" width="9.17" height="9.17" alt="" />
+                  Money Back
+                </span>
+              </div>
+              <div class="ds-mock__chips">
+                <span class="ds-mock__chip">placepot <span class="ds-mock__chip-pool">£48k</span></span>
+                <span class="ds-mock__chip ds-mock__chip--icon">
+                  <span class="ds-mock__promo">
+                    <img src="images/ds-icons/money-back.svg" width="9.17" height="9.17" alt="" />
+                  </span>
+                  12:30
+                </span>
+                <span class="ds-mock__chip">12:30</span>
+                <span class="ds-mock__chip">12:30</span>
+                <span class="ds-mock__chip">12:30</span>
+                <span class="ds-mock__chip">12:30</span>
+                <span class="ds-mock__chip">12:30</span>
+                <span class="ds-mock__chip">quadpot <span class="ds-mock__chip-pool">£48k</span></span>
+              </div>
+            </div>
+          </div>
+
+          <div class="ds-mock__popup">
+            <div class="ds-mock__popup-title">
+              <img src="images/ds-icons/warning-popup.svg" width="15.28" height="15.28" alt="" />
+              You have lost £100
+            </div>
+            <p>
+              Your recent play has resulted in £100 loss in the past 24 hours.
+              Taking a short break might help you keep your betting enjoyable
+            </p>
+            <p>Do you wish to continue?</p>
+            <div class="ds-mock__buttons">
+              <span class="ds-mock__button ds-mock__button--secondary">Keep Playing</span>
+              <span class="ds-mock__button ds-mock__button--primary">Exit Game</span>
+            </div>
+          </div>
         </div>
       </div>
     </section>
