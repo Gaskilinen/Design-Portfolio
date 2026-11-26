@@ -46,6 +46,13 @@
     if (next) next.addEventListener('click', function () { step(1); });
     track.addEventListener('scroll', update, { passive: true });
     window.addEventListener('resize', update);
+    // Re-check when the track's content changes size (late fonts, styles or images).
+    if ('ResizeObserver' in window) {
+      var ro = new ResizeObserver(update);
+      ro.observe(track);
+      Array.prototype.forEach.call(track.children, function (child) { ro.observe(child); });
+    }
+    window.addEventListener('load', update);
     update();
   });
 })();

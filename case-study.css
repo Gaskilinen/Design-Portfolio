@@ -453,3 +453,169 @@
 
   .reflection__quote { gap: var(--space-04); }
 }
+
+/* ---------- SHARED CASE STUDY BLOCKS (Multiples, Lock In Your Price) ---------- */
+.text-600 { color: var(--color-neutral-600); }   /* Figma raw #57596b, as on the homepage Multiples card */
+.nowrap { white-space: nowrap; }
+
+.hero-pair {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-05);
+  width: 100%;
+  padding: var(--space-05) 0;
+}
+
+.hero-pair img { flex: none; object-fit: cover; }
+
+.research-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-05);
+  padding: var(--space-05);
+}
+
+/* Figma sizes images as fixed boxes with cover fill. */
+.research-card img { flex: none; object-fit: cover; }
+
+/* Insight text wraps to the card's image width instead of widening the card. */
+.research-card .stack-8 { width: 0; min-width: 100%; }
+
+/* ---------- STEP FLOWS (design process, user journey) ---------- */
+.flow {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-03);
+  padding: var(--space-05);
+}
+
+.flow__step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-04);
+  width: 203px;
+}
+
+/* Captions fill the step so every caption box ends level with the tallest one. */
+.flow--captioned .flow__step { align-self: stretch; }
+
+.flow__step img { width: 100%; height: auto; }
+
+.flow__step .chip { flex: none; }
+
+.flow__caption {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: var(--space-03);
+  align-self: stretch;
+  list-style: none;
+}
+
+.flow__point {
+  display: flex;
+  align-items: center;
+  gap: var(--space-02);
+}
+
+.flow__point img { flex: none; width: 20px; height: 20px; }
+
+/* Figma's arrow is a 100px line at the top of the row; its end caps overhang the line box. */
+.flow__arrow {
+  position: relative;
+  flex: none;
+  width: 100px;
+  height: 0;
+}
+
+.flow__arrow img {
+  position: absolute;
+  top: -3.68px;
+  left: -2.89px;
+  max-width: none;
+}
+
+/* Screen recordings and interview clips. Aspect ratio is set per page. */
+.interview {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  border-radius: var(--radius-md);
+}
+
+.insights {
+  width: 100%;
+  padding: var(--space-05);
+}
+
+.insights .learning {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.insights .learning ul { width: 100%; }
+
+.learning__title--positive { color: var(--pf-text-positive); }
+.learning__title--negative { color: var(--pf-text-negative); }
+
+/* ---------- ITERATIONS ---------- */
+.iterations {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-07);
+  width: 100%;
+}
+
+.iterations__body {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.iterations__examples {
+  display: flex;
+  align-items: center;
+  gap: var(--space-06);
+}
+
+.iterations__examples figure {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-03);
+}
+
+.iterations__examples img { width: 272px; height: auto; }
+
+/* ---------- KEY DESIGN DECISIONS ---------- */
+.decisions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-05);
+  width: 100%;
+}
+
+.reflection__quote p.text-600 { color: var(--color-neutral-600); }
+.reflection__quote p.secondary { color: var(--pf-text-secondary); }
+
+@media (max-width: 1100px) {
+  .iterations { flex-direction: column; }
+  .iterations__body { flex: none; width: 100%; }
+}
+
+@media (max-width: 900px) {
+  .insights { flex-direction: column; }
+  .insights .learning { flex: none; }
+}
+
+@media (max-width: 768px) {
+  .hero-pair { gap: var(--space-04); padding: var(--space-05) var(--space-04); }
+  .hero-pair img { flex: 0 1 auto; min-width: 0; height: auto; }
+
+  .iterations__examples { flex-wrap: wrap; gap: var(--space-05); }
+  .iterations__examples figure { flex: 1 1 140px; }
+  .iterations__examples img { width: 100%; }
+
+  .nowrap { white-space: normal; }
+}
