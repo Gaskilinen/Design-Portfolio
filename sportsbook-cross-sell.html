@@ -1,0 +1,1203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sportsbook Cross Sell – Andrew Gaskell</title>
+  <meta name="description" content="Case study: improving the Tote sportsbook customer experience with limited developer resource, validated through A/B testing." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Lato:wght@400;700&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="tokens.css" />
+  <link rel="stylesheet" href="site.css" />
+  <script>
+    if ('IntersectionObserver' in window) document.documentElement.classList.add('reveal-ready');
+  </script>
+  <style>
+    /* ---------- HEADER (case study variant) ---------- */
+    /* Back button and contact links both centre on y=47.5 in the 83px bar, as in Figma. */
+    .site-header--case {
+      height: 83px;
+      min-height: 0;
+      padding-top: 12px;
+      padding-bottom: 0;
+    }
+
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-02);
+      /* Figma strokes sit inside the 80×36 box, so padding gives up the 1px border. */
+      padding: 7px 11px;
+      background: var(--pf-surface);
+      border: 1px solid var(--pf-action-primary);
+      border-radius: var(--radius-md);
+      font-family: var(--font-ui);
+      font-size: var(--font-size-label);
+      font-weight: 600;
+      line-height: 1.34;
+      letter-spacing: -0.065px;
+      color: var(--pf-text-strong);
+      text-decoration: none;
+      white-space: nowrap;
+      transition: background-color 0.15s ease;
+    }
+
+    .btn-secondary:hover {
+      background: var(--pf-surface-muted);
+    }
+
+    .btn-secondary__icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 20px;
+      height: 20px;
+    }
+
+    .btn-secondary__icon img {
+      flex: none;
+      transform: rotate(90deg);
+    }
+
+    /* ---------- LAYOUT ---------- */
+    .cs {
+      /* Left edge of the content column; carousels use it to bleed to the right edge of the screen. */
+      --col-left: calc(262px + max(0px, (100vw - 1440px) / 2));
+      display: grid;
+      grid-template-columns: 262px minmax(0, 916px) 1fr;
+      max-width: 1440px;
+      margin: 0 auto;
+      overflow-x: clip;
+    }
+
+    .side-nav {
+      position: sticky;
+      top: 83px;
+      align-self: start;
+      padding: 59px 0 var(--space-05) 60px;
+    }
+
+    .side-nav ul {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-05);
+      list-style: none;
+    }
+
+    .side-nav a {
+      display: block;
+      font-size: var(--font-size-body-sm);
+      line-height: 18px;
+      color: var(--pf-text-secondary);
+      text-decoration: none;
+    }
+
+    .side-nav a:hover {
+      text-decoration: underline;
+    }
+
+    .side-nav a[aria-current="true"] {
+      font-weight: 700;
+      color: var(--pf-text-primary);
+    }
+
+    .cs-main {
+      display: flex;
+      flex-direction: column;
+      gap: 128px;
+      min-width: 0;
+      padding: 60px 0 237px;
+    }
+
+    .cs-main [id] {
+      scroll-margin-top: 110px;
+    }
+
+    .section {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: var(--space-07);
+    }
+
+    /* ---------- TYPE ---------- */
+    /* Explicit line heights match Figma's per-line heights for multi-line text. */
+    .t-13 { font-size: var(--font-size-label); line-height: 17px; }
+    .t-14 { font-size: var(--font-size-body-sm); line-height: 18px; }
+    .t-18 { font-size: var(--font-size-body); line-height: 23px; }
+
+    .h-section {
+      font-size: var(--font-size-h4);
+      font-weight: 500;
+      line-height: 33px;
+      color: var(--pf-text-strong);
+    }
+
+    .h-sub {
+      font-size: var(--font-size-body-lg);
+      font-weight: 500;
+      line-height: 26px;
+      color: var(--pf-text-strong);
+    }
+
+    .h-sub--primary { color: var(--pf-text-primary); }
+
+    .muted { color: var(--pf-text-tertiary); }
+    .secondary { color: var(--pf-text-secondary); }
+    .strong { color: var(--pf-text-strong); }
+    .bold { font-weight: 700; }
+    .w-636 { width: 636px; max-width: 100%; }
+    .w-660 { width: 660px; max-width: 100%; }
+
+    .panel {
+      background: var(--pf-surface-muted);
+      border-radius: var(--radius-md);
+    }
+
+    .stack-12 { display: flex; flex-direction: column; gap: var(--space-03); }
+    .section > .stack-12 { align-self: stretch; }
+
+    /* Chips on case study pages use DM Sans Medium 13 (homepage chips use Lato 14). */
+    .chip--label {
+      font-family: var(--font-sans);
+      font-size: var(--font-size-label);
+      line-height: 17px;
+      flex: none;
+    }
+
+    .chip--pain {
+      background: var(--pf-tag-pain);
+      color: var(--pf-surface);
+    }
+
+    .chip--business {
+      background: var(--pf-tag-business);
+      color: var(--pf-text-primary);
+    }
+
+    /* ---------- METRICS ---------- */
+    .metric-row {
+      display: flex;
+      gap: var(--space-07);
+      width: 100%;
+      font-weight: 500;
+    }
+
+    .metric-row--ruled {
+      padding: var(--space-05) 0;
+      border-top: 1px solid var(--pf-border-divider);
+      border-bottom: 1px solid var(--pf-border-divider);
+    }
+
+    .metric-row .metric__value { line-height: 40px; }
+    .metric-row .metric__label { line-height: 17px; }
+    .metric-row .metric--fixed .metric__label { width: 140px; }
+
+    .metric__value--neutral { color: var(--pf-text-primary); }
+    .metric__value--negative { color: var(--pf-text-negative); }
+    .metric__value .muted { color: var(--pf-text-tertiary); }
+
+    /* ---------- OVERVIEW ---------- */
+    .overview__header {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-03);
+      width: 848px;
+      max-width: 100%;
+    }
+
+    .overview__title {
+      font-size: var(--font-size-h3);
+      font-weight: 500;
+      line-height: 40px;
+      color: var(--pf-text-primary);
+    }
+
+    .ab-summary {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-05);
+      width: 100%;
+    }
+
+    .ab-summary__test {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-04);
+    }
+
+    .hero-shot {
+      display: flex;
+      justify-content: center;
+      width: 100%;
+      padding: var(--space-05) 0;
+    }
+
+    .hero-shot img {
+      width: 280px;
+      height: auto;
+      aspect-ratio: 280 / 480;
+      object-fit: cover;
+    }
+
+    /* ---------- PROBLEM ---------- */
+    .problem-list {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-04);
+      width: 100%;
+      padding-left: 27px;
+      color: var(--pf-text-secondary);
+    }
+
+    /* ---------- RESEARCH ---------- */
+    .benchmark {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-05);
+      width: 100%;
+      padding: var(--space-05);
+    }
+
+    .figure {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-02);
+    }
+
+    .figure img {
+      width: 100%;
+      height: auto;
+      aspect-ratio: 1562 / 555;
+      object-fit: cover;
+    }
+
+    .figure figcaption {
+      font-weight: 500;
+      color: var(--pf-text-secondary);
+    }
+
+    .stack-8 { display: flex; flex-direction: column; gap: var(--space-02); }
+
+    /* ---------- STAKEHOLDERS ---------- */
+    .feedback {
+      display: flex;
+      align-items: stretch;
+      gap: var(--space-04);
+      width: 100%;
+    }
+
+    .feedback__card {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: var(--space-05);
+      padding: var(--space-05);
+    }
+
+    .feedback__card--stakeholder {
+      flex: none;
+      width: 235px;
+    }
+
+    .feedback__card--customer {
+      flex: 1 1 0;
+      min-width: 0;
+    }
+
+    .quote {
+      font-weight: 500;
+      color: var(--pf-text-strong);
+    }
+
+    .metric-row--survey {
+      gap: var(--space-06);
+      padding-bottom: var(--space-05);
+      border-bottom: 1px solid var(--pf-border-divider);
+    }
+
+    .metric-row--survey .metric__value { color: var(--pf-text-primary); }
+
+    .pain {
+      display: flex;
+      align-items: center;
+      gap: var(--space-04);
+      width: 100%;
+      color: var(--pf-text-strong);
+    }
+
+    .pain__text--nowrap { white-space: nowrap; }
+    .pain__text--fill { flex: 1 1 0; min-width: 0; }
+
+    .hypothesis__text {
+      font-style: italic;
+      font-variation-settings: "opsz" 9;
+      color: var(--pf-text-secondary);
+    }
+
+    /* ---------- CAROUSELS ---------- */
+    .carousel-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: var(--space-05);
+      width: 100%;
+    }
+
+    .carousel-head--center { align-items: center; }
+
+    .carousel-controls {
+      display: flex;
+      flex: none;
+      gap: var(--space-03);
+    }
+
+    .icon-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 44px;
+      height: 36px;
+      padding: var(--space-02) var(--space-03);
+      background: var(--pf-surface);
+      border: 1px solid var(--pf-action-primary);
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      transition: background-color 0.15s ease;
+    }
+
+    .icon-btn:hover:not(:disabled) { background: var(--pf-surface-muted); }
+
+    .icon-btn:disabled {
+      border-color: var(--pf-border-divider);
+      cursor: default;
+    }
+
+    /* Each button carries the enabled (dark) and disabled (grey) chevrons from Figma; flipped for direction. */
+    .icon-btn img { width: 20px; height: 20px; }
+    .icon-btn .is-off { display: none; }
+    .icon-btn:disabled .is-on { display: none; }
+    .icon-btn:disabled .is-off { display: block; }
+    .icon-btn--prev .is-on,
+    .icon-btn--next .is-off { transform: scaleX(-1); }
+
+    .carousel {
+      display: flex;
+      align-items: flex-start;
+      gap: var(--space-04);
+      width: calc(100vw - var(--col-left));
+      overflow-x: auto;
+      overscroll-behavior-x: contain;
+      scroll-padding-left: 0;
+      scrollbar-width: none;
+    }
+
+    .carousel::-webkit-scrollbar { display: none; }
+
+    .carousel:focus-visible {
+      outline-offset: 4px;
+    }
+
+    .carousel > * { flex: none; }
+
+    /* Trailing space so the last panel ends 60px from the screen edge (16px gap + 44px). */
+    .carousel::after {
+      content: "";
+      flex: none;
+      width: 44px;
+    }
+
+    .caption {
+      padding: var(--space-03);
+      background: var(--pf-surface-caption);
+      border-radius: var(--radius-md);
+      font-weight: 500;
+      color: var(--pf-text-secondary);
+    }
+
+    .journey {
+      display: flex;
+      align-items: flex-start;
+      gap: var(--space-07);
+      padding: var(--space-05);
+    }
+
+    .journey__step {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-04);
+      width: 161px;
+    }
+
+    .journey__step--wide { width: 165px; }
+
+    .journey__step img {
+      width: 100%;
+      height: 350px;
+      object-fit: cover;
+      border-radius: 20px;
+    }
+
+    .caption--fixed { height: 109px; }
+
+    .conversion {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-05);
+      width: 1036px;
+      height: 523px;
+      padding: var(--space-05);
+    }
+
+    .conversion img {
+      width: 988px;
+      height: 348px;
+      object-fit: cover;
+    }
+
+    /* ---------- DESIGN PROCESS ---------- */
+    .process {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-07);
+      width: 100%;
+    }
+
+    .stage {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-05);
+      width: 100%;
+    }
+
+    .stage__panel {
+      display: flex;
+      align-items: flex-start;
+      gap: var(--space-07);
+      padding: var(--space-05);
+    }
+
+    .stage__item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--space-05);
+    }
+
+    .stage__item--stretch { align-self: stretch; }
+
+    .crop {
+      position: relative;
+      overflow: hidden;
+      border-radius: var(--radius-md);
+    }
+
+    .crop img {
+      position: absolute;
+      max-width: none;
+    }
+
+    .crop--wireframe { width: 239px; height: 350px; }
+    .crop--wireframe img { left: 0; top: -5.47%; width: 137.08%; height: 124.57%; }
+
+    .stage__item--stretch img {
+      flex: 1 1 0;
+      min-height: 0;
+      height: 350px;
+      width: auto;
+      aspect-ratio: 1255 / 1400;
+      object-fit: cover;
+    }
+
+    .stage__notes {
+      flex: none;
+      padding-left: 21px;
+      color: var(--pf-text-secondary);
+    }
+
+    /* Figma separates the points with an empty line. */
+    .stage__notes li + li { margin-top: 18px; }
+
+    /* ---------- VALIDATION ---------- */
+    .validation__intro {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-03);
+    }
+
+    .validation__intro ol {
+      padding-left: 21px;
+    }
+
+    .results {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-05);
+      width: 100%;
+    }
+
+    .test {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-06);
+      width: 100%;
+      padding: var(--space-05);
+    }
+
+    .test__head {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-04);
+    }
+
+    .test__name { color: var(--pf-text-primary); }
+
+    .learnings {
+      display: flex;
+      align-items: stretch;
+      gap: var(--space-06);
+      list-style: none;
+    }
+
+    .learning {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-03);
+      padding: var(--space-04);
+      background: var(--pf-surface);
+      border-radius: var(--radius-md);
+      color: var(--pf-text-primary);
+    }
+
+    .learning--3 { width: 261px; }
+
+    .learning__title {
+      display: flex;
+      align-items: center;
+      gap: var(--space-02);
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .learning__title--top { align-items: flex-start; }
+
+    .learning__title img { flex: none; width: 20px; height: 20px; }
+
+    .learning ul {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-03);
+      width: 176px;
+      max-width: 100%;
+      padding-left: 21px;
+    }
+
+    .learning--3 ul { width: 100%; }
+
+    .crop--abtest {
+      width: 100%;
+      aspect-ratio: 1496 / 432;
+      border-radius: 0;
+    }
+
+    .crop--abtest img { left: -4.08%; top: -3.47%; width: 105.35%; height: 115.74%; }
+
+    .chart-panel {
+      width: 100%;
+      padding: var(--space-05);
+    }
+
+    .chart-panel img {
+      width: 100%;
+      height: auto;
+      aspect-ratio: 1562 / 844;
+      object-fit: cover;
+    }
+
+    /* ---------- REFLECTIONS ---------- */
+    .reflections {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-07);
+      width: 100%;
+    }
+
+    .reflection {
+      display: flex;
+      align-items: center;
+      gap: var(--space-08);
+    }
+
+    .reflection__title,
+    .reflection__quote {
+      flex: 1 1 0;
+      min-width: 0;
+    }
+
+    .reflection__title .h-sub { white-space: nowrap; }
+
+    .reflection__quote {
+      display: flex;
+      gap: var(--space-06);
+      padding: var(--space-05);
+    }
+
+    .reflection__mark {
+      flex: none;
+      width: 16px;
+      font-size: var(--font-size-h2);
+      font-weight: 500;
+      line-height: 51px;
+      color: var(--pf-text-strong);
+    }
+
+    .reflection__quote p {
+      flex: 1 1 0;
+      min-width: 0;
+      color: var(--pf-text-primary);
+    }
+
+    /* ---------- RESPONSIVE ---------- */
+    @media (max-width: 1100px) {
+      .cs {
+        --col-left: 40px;
+        grid-template-columns: minmax(0, 1fr);
+        padding: 0 40px;
+      }
+
+      .side-nav {
+        top: 83px;
+        z-index: 50;
+        margin: 0 -40px;
+        padding: var(--space-03) 40px;
+        background: var(--pf-surface);
+        border-bottom: 1px solid var(--pf-border-divider);
+        overflow-x: auto;
+        scrollbar-width: none;
+      }
+
+      .side-nav::-webkit-scrollbar { display: none; }
+
+      .side-nav ul {
+        flex-direction: row;
+        gap: var(--space-05);
+        width: max-content;
+      }
+
+      .side-nav a { white-space: nowrap; }
+      .side-nav br { display: none; }
+
+      .cs-main {
+        padding: var(--space-07) 0 var(--space-11);
+        gap: var(--space-09);
+      }
+
+      .cs-main [id] { scroll-margin-top: 140px; }
+
+      .carousel::after { width: 24px; }
+    }
+
+    @media (max-width: 900px) {
+      .feedback,
+      .reflection {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .feedback__card--stakeholder { width: auto; }
+
+      .reflection { gap: var(--space-05); }
+      .reflection__title .h-sub { white-space: normal; }
+
+      .pain { align-items: flex-start; flex-wrap: wrap; gap: var(--space-02) var(--space-04); }
+      .pain__text--nowrap { white-space: normal; flex: 1 1 200px; }
+
+      .learnings { flex-wrap: wrap; }
+      .learning, .learning--3 { flex: 1 1 220px; width: auto; }
+      .learning ul { width: 100%; }
+
+      .metric-row { flex-wrap: wrap; gap: var(--space-05) var(--space-07); }
+    }
+
+    @media (max-width: 768px) {
+      .site-header--case {
+        height: auto;
+        padding: var(--space-05) 20px;
+      }
+
+      .cs {
+        --col-left: 20px;
+        padding: 0 20px;
+      }
+
+      .side-nav {
+        top: 0;
+        margin: 0 -20px;
+        padding: var(--space-03) 20px;
+      }
+
+      .cs-main [id] { scroll-margin-top: 70px; }
+
+      .carousel::after { width: 4px; }
+
+      .overview__title { font-size: 26px; line-height: 34px; }
+      .h-section { font-size: 22px; line-height: 29px; }
+
+      .metric-row .metric__value { font-size: 26px; line-height: 34px; }
+      .metric-row .metric--fixed .metric__label { width: auto; }
+
+      .metric-row--survey { gap: var(--space-05) var(--space-06); }
+
+      .carousel-head { flex-direction: column; }
+      .carousel-head--center { flex-direction: row; }
+
+      .reflection__quote { gap: var(--space-04); }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header site-header--case">
+    <a class="btn-secondary" href="index.html">
+      <span class="btn-secondary__icon"><img src="images/cs-icon-arrow-back.svg" width="11.2908" height="13.7502" alt="" /></span>
+      Back
+    </a>
+
+    <ul class="site-contact" aria-label="Contact">
+      <li>
+        <a class="header-link" href="mailto:andygaskell10@outlook.com">
+          <img class="header-link__icon" src="images/home-icon-mail.svg" width="20" height="20" alt="" />
+          <span>andygaskell10@outlook.com</span>
+        </a>
+      </li>
+      <li>
+        <a
+          class="header-link header-link--underline"
+          href="https://www.linkedin.com/in/andrew-gaskell-4092a5191/"
+          target="_blank"
+          rel="noopener"
+          aria-label="My LinkedIn Profile (opens in a new tab)"
+        >
+          <img class="header-link__icon" src="images/home-icon-linkedin.svg" width="20" height="20" alt="" />
+          <span>My LinkedIn Profile</span>
+        </a>
+      </li>
+    </ul>
+  </header>
+
+  <div class="cs">
+    <nav class="side-nav" aria-label="Case study sections" data-scrollspy>
+      <ul>
+        <li><a href="#overview">Overview</a></li>
+        <li><a href="#problem">The Problem</a></li>
+        <li><a href="#research">Research</a></li>
+        <li><a href="#feedback">Stakeholder &amp;<br /> Customer Feedback</a></li>
+        <li><a href="#exploration">Exploration</a></li>
+        <li><a href="#process">My Design Process</a></li>
+        <li><a href="#validation">Validation</a></li>
+        <li><a href="#reflections">Reflections &amp; Learnings</a></li>
+      </ul>
+    </nav>
+
+    <main id="main" class="cs-main">
+      <!-- OVERVIEW -->
+      <section id="overview" class="section" aria-labelledby="cs-title" data-reveal>
+        <div class="overview__header">
+          <h1 id="cs-title" class="overview__title">Sportsbook Cross Sell</h1>
+          <p class="t-18 muted">Improving the customer experience with limited developer resource.</p>
+        </div>
+        <p class="t-14 w-660">Introduced a data-led approach to our sportsbook product, where I benchmarked the existing experience and identified a significant drop-off between the homepage and sportspage. Analysis showed awareness as a key factor for customers not betting with the Tote sportsbook. There was no back-end resource available for the initiative, so I used existing underused functionality, which was repurposed and displayed on the homepage rather than hidden on a bet receipt. The first A/B test failed, however we found issues with the audience segmentation, so despite stakeholder pressure to pull the initiative, we reran the A/B test which found the component to be successful.</p>
+
+        <div class="ab-summary">
+          <div class="ab-summary__test">
+            <h2 class="t-14">A/B Test 2</h2>
+            <div class="metric-row metric-row--ruled">
+              <div class="metric">
+                <p class="metric__value">89.2%</p>
+                <p class="metric__label">Widget Conversion rate</p>
+              </div>
+              <div class="metric metric--fixed">
+                <p class="metric__value">+5.25%</p>
+                <p class="metric__label">No. bets placed</p>
+              </div>
+              <div class="metric metric--fixed">
+                <p class="metric__value">+4.20%</p>
+                <p class="metric__label">Avg. stake size</p>
+              </div>
+            </div>
+          </div>
+          <div class="ab-summary__test">
+            <h2 class="t-14">A/B Test 1</h2>
+            <div class="metric-row metric-row--ruled">
+              <div class="metric">
+                <p class="metric__value">88.6%</p>
+                <p class="metric__label">Widget Conversion rate</p>
+              </div>
+              <div class="metric metric--fixed">
+                <p class="metric__value metric__value--negative">-3.9%</p>
+                <p class="metric__label">No. bets placed</p>
+              </div>
+              <div class="metric metric--fixed">
+                <p class="metric__value metric__value--negative">-8.40%</p>
+                <p class="metric__label">Avg. stake size</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-shot panel">
+          <img src="images/cs-hero.png" width="280" height="480" alt="The sportsbook cross-sell widget on the Tote app homepage, showing a France v Morocco bet builder with an Add to betslip button" />
+        </div>
+      </section>
+
+      <!-- THE PROBLEM -->
+      <section id="problem" class="section" aria-labelledby="problem-title" data-reveal>
+        <h2 id="problem-title" class="h-section">The Problem</h2>
+        <ol class="problem-list t-18">
+          <li>Sportsbook average spend per user is below target.</li>
+          <li>Customers can’t find our sportsbook markets.</li>
+          <li>There is no back-end resource and our current sportsbook providers is a hard-coded third party with limited integration functionality.</li>
+        </ol>
+      </section>
+
+      <!-- RESEARCH -->
+      <section id="research" class="section" aria-labelledby="research-title" data-reveal>
+        <h2 id="research-title" class="h-section">Research</h2>
+        <div class="benchmark panel">
+          <h3 class="t-14 bold strong">Benchmarking</h3>
+          <figure class="figure">
+            <img src="images/cs-funnel-homepage-to-bet.png" width="868" height="308" loading="lazy" alt="Funnel chart from homepage to sportsbook bet placed, showing a 70% drop off between the homepage and the sportsbook page" />
+            <figcaption class="t-13">In the homepage-to-sportsbook-bet-placed funnel, there is a 70% drop off between the homepage and sportsbook page.</figcaption>
+          </figure>
+          <figure class="figure">
+            <img src="images/cs-funnel-quicklinks.png" width="868" height="308" loading="lazy" alt="Funnel chart from homepage quick links to bet placed" />
+            <figcaption class="t-13">Event quick links on the homepage convert to bets placed 23% higher than customers finding markets themselves.</figcaption>
+          </figure>
+          <div class="stack-8 t-14">
+            <h3 class="bold strong">Insight</h3>
+            <p class="secondary">Customers convert well when they find the market they want to bet on; the biggest drop off is from customers trying to reach those markets. When customers are signposted to key markets, they convert better than customers finding the markets themselves.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- STAKEHOLDERS & CUSTOMERS -->
+      <section id="feedback" class="section" aria-labelledby="feedback-title" data-reveal>
+        <div class="stack-12">
+          <h2 id="feedback-title" class="h-section">Talking to Stakeholders &amp; Customers</h2>
+          <p class="t-14 muted w-636">I surveyed our sportsbook customers and received 812 responses. The stakeholders were originally hesitant to embrace the metric benchmarking I was introducing, as previously they relied on their experience to make decisions with our third-party integration.</p>
+        </div>
+
+        <div class="feedback">
+          <div class="feedback__card feedback__card--stakeholder panel">
+            <h3 class="chip chip--label">Stakeholder Feedback</h3>
+            <p class="quote t-13">“The betslip is not up to standards, that is where we should look.”</p>
+            <p class="quote t-13">“Why should I care about conversions when I know where the problems are?”</p>
+            <p class="quote t-13">“Could we be in charge of the content so we can surface relevant markets based on time?”</p>
+            <p class="quote t-13">“How can we get our partner to finish tagging the entire sportsbook customer journey?”</p>
+          </div>
+
+          <div class="feedback__card feedback__card--customer panel">
+            <h3 class="chip chip--label">Customer Feedback</h3>
+            <div class="metric-row metric-row--survey">
+              <div class="metric metric--fixed">
+                <p class="metric__value">3.74<span class="muted">/5</span></p>
+                <p class="metric__label">Navigation satisfaction</p>
+              </div>
+              <div class="metric metric--fixed">
+                <p class="metric__value">2.90<span class="muted">/5</span></p>
+                <p class="metric__label">Speed to find market</p>
+              </div>
+              <div class="metric">
+                <p class="metric__value">-7</p>
+                <p class="metric__label">NPS</p>
+              </div>
+              <div class="metric">
+                <p class="metric__value">44.5%</p>
+                <p class="metric__label">Have not placed an acca</p>
+              </div>
+            </div>
+            <div class="pain">
+              <span class="chip chip--label chip--pain">Pain Point</span>
+              <p class="t-14 pain__text--nowrap">“I did not know I could bet on bet builders with the Tote”</p>
+            </div>
+            <div class="pain">
+              <span class="chip chip--label chip--pain">Pain Point</span>
+              <p class="t-14 pain__text--nowrap">“It can be hard to find the match I want to bet on”</p>
+            </div>
+            <div class="pain">
+              <span class="chip chip--label chip--pain">Pain Point</span>
+              <p class="t-14 pain__text--nowrap">“I find it easier to use competitors for my bet builders”</p>
+            </div>
+            <div class="pain">
+              <span class="chip chip--label chip--business">Business Requirement</span>
+              <p class="t-14 pain__text--fill">The majority of customers are not betting on high margin products that are popular on competitor sites.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="stack-12">
+          <h3 class="h-sub h-sub--primary">Hypothesis</h3>
+          <p class="t-18 hypothesis__text">By surfacing our sportsbook markets on the homepage, there will be an increase in sportsbook bets placed. This will result in an increased average spend per user.</p>
+        </div>
+      </section>
+
+      <!-- EXPLORATION -->
+      <section id="exploration" class="section" aria-labelledby="exploration-title" data-reveal>
+        <h2 id="exploration-title" class="h-section">Exploration</h2>
+        <div class="stage">
+          <div class="carousel-head">
+            <div class="stack-12 w-660">
+              <h3 class="h-sub">Existing Journey</h3>
+              <p class="t-14 muted w-636">The existing journey was a cross sell feature that existed on the bet receipt. As it is not signposted and behind a paywall, it is largely forgotten about across the business. As there was no back-end resource, it was necessary to find existing functionality to help solve the customer problem rather than building something new.</p>
+            </div>
+            <div class="carousel-controls">
+              <button class="icon-btn icon-btn--prev" type="button" data-carousel-prev aria-controls="journey-track" aria-label="Previous" disabled>
+                <img class="is-on" src="images/cs-icon-chevron-right.svg" alt="" />
+                <img class="is-off" src="images/cs-icon-chevron-left-disabled.svg" alt="" />
+              </button>
+              <button class="icon-btn icon-btn--next" type="button" data-carousel-next aria-controls="journey-track" aria-label="Next">
+                <img class="is-on" src="images/cs-icon-chevron-right.svg" alt="" />
+                <img class="is-off" src="images/cs-icon-chevron-left-disabled.svg" alt="" />
+              </button>
+            </div>
+          </div>
+
+          <div id="journey-track" class="carousel" data-carousel tabindex="0" role="region" aria-label="Existing journey screens">
+            <ol class="journey panel" style="list-style: none;">
+              <li class="journey__step">
+                <img src="images/cs-existing-1.png" width="161" height="350" loading="lazy" alt="Betslip with a racing bet ready to place" />
+                <p class="caption t-13">Cross-sell is hidden behind a pay barrier as it is only visible once a customer has placed a a racing bet.</p>
+              </li>
+              <li class="journey__step">
+                <img src="images/cs-existing-2.png" width="161" height="350" loading="lazy" alt="Bet receipt confirming the bet has been placed" />
+                <p class="caption caption--fixed t-13">Customer must scroll down to view the cross-sell CTA.</p>
+              </li>
+              <li class="journey__step">
+                <img src="images/cs-existing-3.png" width="161" height="350" loading="lazy" alt="Bet receipt scrolled to the Cross Card Double cross-sell with an Add to betslip button" />
+                <p class="caption t-13">When a customer presses the CTA, there are no interaction states and customers remain on the receipt.</p>
+              </li>
+              <li class="journey__step">
+                <img src="images/cs-existing-4.png" width="161" height="350" loading="lazy" alt="Sportsbook homepage with an active betslip button" />
+                <p class="caption t-13">A customer closes the betslip to see the sportsbook homepage with an active betslip button.</p>
+              </li>
+              <li class="journey__step journey__step--wide">
+                <img src="images/cs-existing-5.png" width="165" height="350" loading="lazy" alt="Betslip pre-filled with the cross-sell bet" />
+                <p class="caption caption--fixed t-13">Customer presses betslip to see it pre-filled with the cross-sell bet.</p>
+              </li>
+            </ol>
+            <figure class="conversion panel">
+              <img src="images/cs-existing-conversion.png" width="988" height="348" loading="lazy" alt="Conversion chart for the existing cross-sell component" />
+              <figcaption class="caption t-13">Despite the poor customer journey, the cross sell component converts at 34%, with nearly 5000 customers placing a bet.</figcaption>
+            </figure>
+          </div>
+        </div>
+      </section>
+
+      <!-- MY DESIGN PROCESS -->
+      <section id="process" class="section" aria-labelledby="process-title" data-reveal>
+        <h2 id="process-title" class="h-section">My Design Process</h2>
+        <div class="process">
+          <div class="stage">
+            <div class="carousel-head carousel-head--center">
+              <h3 class="h-sub">Stage 1</h3>
+              <div class="carousel-controls">
+                <button class="icon-btn icon-btn--prev" type="button" data-carousel-prev aria-controls="stage1-track" aria-label="Previous" disabled>
+                  <img class="is-on" src="images/cs-icon-chevron-right.svg" alt="" />
+                  <img class="is-off" src="images/cs-icon-chevron-left-disabled.svg" alt="" />
+                </button>
+                <button class="icon-btn icon-btn--next" type="button" data-carousel-next aria-controls="stage1-track" aria-label="Next">
+                  <img class="is-on" src="images/cs-icon-chevron-right.svg" alt="" />
+                  <img class="is-off" src="images/cs-icon-chevron-left-disabled.svg" alt="" />
+                </button>
+              </div>
+            </div>
+            <div id="stage1-track" class="carousel" data-carousel tabindex="0" role="region" aria-label="Stage 1 designs">
+              <div class="stage__panel panel">
+                <figure class="stage__item">
+                  <div class="crop crop--wireframe">
+                    <img src="images/cs-stage1-wireframe.jpg" width="656" height="875" loading="lazy" alt="Hand-drawn wireframe of the app homepage with a boost card and next race section" />
+                  </div>
+                  <figcaption class="chip chip--label">Wireframes</figcaption>
+                </figure>
+                <figure class="stage__item">
+                  <img src="images/cs-stage1-variations.png" width="737" height="344" loading="lazy" alt="Four variations of a Mega Boost bet card" />
+                  <figcaption class="chip chip--label">Exploring Variations</figcaption>
+                </figure>
+                <figure class="stage__item stage__item--stretch">
+                  <img src="images/cs-stage1-prototype.png" width="314" height="350" loading="lazy" alt="Prototype of the app homepage with the Mega Boost card" />
+                  <figcaption class="chip chip--label">Prototypes</figcaption>
+                </figure>
+                <ol class="stage__notes t-14" style="width: 290px;">
+                  <li>Explored whether to display a singular boost or by having several. The issue with having several listed was that it would be pushing content further beneath the scroll.</li>
+                  <li>Stakeholders suggested adding £10.00 stake returns X amount, as based on their experience it increases the customer’s stake amount.</li>
+                  <li>Biggest feedback was to concentrate on cross selling bet builders rather than the mega boost, as there was significant investment in the former whereas the latter is a loss-lead.</li>
+                </ol>
+              </div>
+            </div>
+          </div>
+
+          <div class="stage">
+            <div class="carousel-head carousel-head--center">
+              <h3 class="h-sub">Stage 2</h3>
+              <div class="carousel-controls">
+                <button class="icon-btn icon-btn--prev" type="button" data-carousel-prev aria-controls="stage2-track" aria-label="Previous" disabled>
+                  <img class="is-on" src="images/cs-icon-chevron-right.svg" alt="" />
+                  <img class="is-off" src="images/cs-icon-chevron-left-disabled.svg" alt="" />
+                </button>
+                <button class="icon-btn icon-btn--next" type="button" data-carousel-next aria-controls="stage2-track" aria-label="Next">
+                  <img class="is-on" src="images/cs-icon-chevron-right.svg" alt="" />
+                  <img class="is-off" src="images/cs-icon-chevron-left-disabled.svg" alt="" />
+                </button>
+              </div>
+            </div>
+            <div id="stage2-track" class="carousel" data-carousel tabindex="0" role="region" aria-label="Stage 2 designs">
+              <div class="stage__panel panel">
+                <figure class="stage__item">
+                  <img src="images/cs-stage2-multiples-variations.png" width="846" height="350" loading="lazy" alt="Three multiples card variations: Cross Card treble, Cross Card Double and a France v Morocco bet builder" />
+                  <figcaption class="chip chip--label">Exploring Mutliples Variations</figcaption>
+                </figure>
+                <figure class="stage__item">
+                  <img src="images/cs-stage2-final-designs.png" width="904" height="350" loading="lazy" alt="Final designs of the app homepage and menu with the cross-sell card" />
+                  <figcaption class="chip chip--label">Final Designs</figcaption>
+                </figure>
+                <ol class="stage__notes t-14" style="width: 319px;">
+                  <li>Pivoted to a card with a horizontal scroll, which are common place in the industry.</li>
+                  <li>Explored multiple formats and landed on one that I felt was most scaleable and can be used more multiple bet types</li>
+                  <li>Changed from the yellow cta to our secondary buttons, as our yellow brand guidelines says it should only be applied when there is a promotion or a special offer to our customers.</li>
+                  <li>Discussion with our operations teams meant that bet builders were not technologically available. We pivoted and gave full control to the ops team whereby they can customise the title and build their own bets rather than using the third party feed.</li>
+                </ol>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- VALIDATION -->
+      <section id="validation" class="section" aria-labelledby="validation-title" data-reveal>
+        <div class="stack-12">
+          <h2 id="validation-title" class="h-section">Validation</h2>
+          <div class="validation__intro t-14 muted w-636">
+            <p>Conducted an A/B test where our sportsbook customers (defined by placing a bet on the sportsbook within the past month) were split 50:50, with group A seeing the widget once they had logged in. In total, 14,000 customers involved in the experiement. The key success metrics were:</p>
+            <ol>
+              <li>No. of sportsbook bets placed.</li>
+              <li>Avg. stake size.</li>
+            </ol>
+          </div>
+        </div>
+
+        <div class="results">
+          <h3 class="h-sub">A/B Test Results</h3>
+
+          <div class="test panel">
+            <div class="test__head">
+              <h4 class="t-18 test__name">Test 1</h4>
+              <div class="metric-row">
+                <div class="metric">
+                  <p class="metric__value metric__value--neutral">88.6%</p>
+                  <p class="metric__label">Widget Conversion rate</p>
+                </div>
+                <div class="metric metric--fixed">
+                  <p class="metric__value metric__value--negative">-3.9%</p>
+                  <p class="metric__label">No. of bets placed</p>
+                </div>
+                <div class="metric metric--fixed">
+                  <p class="metric__value metric__value--negative">-8.40%</p>
+                  <p class="metric__label">Avg. stake size</p>
+                </div>
+              </div>
+            </div>
+            <ul class="learnings" aria-label="Test 1 learnings">
+              <li class="learning">
+                <h5 class="learning__title learning__title--top t-14"><img src="images/cs-icon-users.svg" alt="" />Audience Segmentation</h5>
+                <ul class="t-14">
+                  <li>Exclude our high-staking customers as they can often skew the data.</li>
+                  <li>Ensure we are targeting sportsbook customers within the component segment.</li>
+                </ul>
+              </li>
+              <li class="learning">
+                <h5 class="learning__title t-14"><img src="images/cs-icon-globe.svg" alt="" />External Factors</h5>
+                <ul class="t-14">
+                  <li>Sportsbook promotions were reduced to our most active of customers, meaning casual users were less incentivised to bet more with us.</li>
+                </ul>
+              </li>
+              <li class="learning learning--3">
+                <h5 class="learning__title t-14"><img src="images/cs-icon-message.svg" alt="" />Stakeholder Management</h5>
+                <ul class="t-14">
+                  <li>Product manager suggested pulling the component, whereas the stakeholders wanted to push to 100%. I suggested rerunning the test, correcting the segmentation to reduce the impact of confounding variables</li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+
+          <div class="test panel">
+            <div class="test__head">
+              <h4 class="t-18 test__name">Test 2</h4>
+              <div class="metric-row">
+                <div class="metric">
+                  <p class="metric__value metric__value--neutral">89.2%</p>
+                  <p class="metric__label">Widget Conversion rate</p>
+                </div>
+                <div class="metric metric--fixed">
+                  <p class="metric__value">5.25%</p>
+                  <p class="metric__label">No. of bets placed</p>
+                </div>
+                <div class="metric metric--fixed">
+                  <p class="metric__value">4.20%</p>
+                  <p class="metric__label">Avg. stake size</p>
+                </div>
+              </div>
+            </div>
+            <div class="crop crop--abtest">
+              <img src="images/cs-abtest2-data.png" width="1576" height="500" loading="lazy" alt="A/B test 2 results data for sportsbook bets placed and average stake size" />
+            </div>
+          </div>
+        </div>
+
+        <div class="results">
+          <h3 class="h-sub">Widget Conversion Rate</h3>
+          <div class="chart-panel panel">
+            <img src="images/cs-widget-conversion.png" width="868" height="469" loading="lazy" alt="Widget conversion rate chart over the test period" />
+          </div>
+        </div>
+      </section>
+
+      <!-- REFLECTIONS -->
+      <section id="reflections" class="section" aria-labelledby="reflections-title" data-reveal>
+        <h2 id="reflections-title" class="h-section">Reflections and Learnings</h2>
+        <div class="reflections">
+          <div class="reflection">
+            <div class="reflection__title stack-12">
+              <h3 class="h-sub h-sub--primary">Working with limited resource</h3>
+              <p class="t-14 muted">All of the Tote’s backend developers were on a priority initiative; however, another team had become blocked and wanted a quick win.</p>
+            </div>
+            <blockquote class="reflection__quote panel">
+              <span class="reflection__mark" aria-hidden="true">“</span>
+              <p class="t-14">Exploring all the customer journeys uncovered functionality that was largely forgotten about. I proposed utilising this functionality, using prototypes to get buy-in with stakeholders.</p>
+              <span class="reflection__mark" aria-hidden="true">“</span>
+            </blockquote>
+          </div>
+          <div class="reflection">
+            <div class="reflection__title stack-12">
+              <h3 class="h-sub h-sub--primary">Data-led approach</h3>
+              <p class="t-14 muted">Previous designers had struggled to build a relationship with sportsbook stakeholders as all decisions were based upon experience and assumptions.</p>
+            </div>
+            <blockquote class="reflection__quote panel">
+              <span class="reflection__mark" aria-hidden="true">“</span>
+              <p class="t-14">Despite stakeholders not being receptive to the conversion benchmarking, I worked with BI teams to build a more comprehensive data report to help convince them. Relying on data and insight helped me build relationships with stakeholders that previous designers could not.</p>
+              <span class="reflection__mark" aria-hidden="true">“</span>
+            </blockquote>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="site.js"></script>
+</body>
+</html>
