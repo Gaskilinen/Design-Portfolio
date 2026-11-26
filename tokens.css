@@ -148,6 +148,12 @@
   /* ── Primitives — Success ── */
   --color-success-portfolio: #3f8f6b; /* Figma: Semantic/success */
 
+  /* ── Primitives — Error / Accent (case study pages) ── */
+  --color-error-portfolio: #c9483f;   /* Figma: Semantic/error */
+  --color-accent-800:      #b5523a;   /* Figma: Accent/800 — Pain Point tag */
+  --color-accent-100:      #f2d7b6;   /* Figma: Accent/100 — Business Requirement tag */
+  --color-neutral-050:     #f9fafb;   /* Figma: Grey/50 — caption background */
+
   /* ── Semantic ── */
   --pf-surface:          var(--color-neutral-000);
   --pf-surface-muted:    var(--color-neutral-100);
@@ -158,6 +164,11 @@
   --pf-text-tertiary:    var(--color-neutral-500);
   --pf-text-chip:        var(--color-grey-800);      /* Figma buttons/secondary/text #626567 — exact reuse */
   --pf-text-positive:    var(--color-success-portfolio);
+  --pf-text-negative:    var(--color-error-portfolio);
+  --pf-text-secondary:   var(--color-aubergine-500);   /* Figma: secondary #625878 */
+  --pf-surface-caption:  var(--color-neutral-050);
+  --pf-tag-pain:         var(--color-accent-800);
+  --pf-tag-business:     var(--color-accent-100);
   --pf-border-divider:   var(--color-neutral-300);
   --pf-border-chip:      var(--color-neutral-400);
   --pf-action-primary:   var(--color-aubergine-800);
@@ -183,7 +194,9 @@
   --font-ui:              "Lato", system-ui, -apple-system, "Segoe UI", sans-serif;
   --font-size-display:    61px;  /* Display — SemiBold */
   --font-size-h1:         49px;  /* H1 — SemiBold */
+  --font-size-h2:         39px;  /* H2 — Medium */
   --font-size-h3:         31px;  /* H3 — Medium */
+  --font-size-h4:         25px;  /* H4 — Medium */
   --font-size-body-lg:    20px;  /* body_large — Medium */
   --font-size-body:       18px;  /* body — Regular */
   --font-size-body-sm:    14px;  /* body_small / body_small_emphasis */
