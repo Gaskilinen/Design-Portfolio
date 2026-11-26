@@ -596,6 +596,9 @@
   width: 100%;
 }
 
+/* Decision titles are h4s for structure, but Figma sets them in Regular 18px. */
+.decisions .reflection__title h4 { font-weight: 400; }
+
 .reflection__quote p.text-600 { color: var(--color-neutral-600); }
 .reflection__quote p.secondary { color: var(--pf-text-secondary); }
 
