@@ -12,6 +12,9 @@
     rel="stylesheet"
   />
   <link rel="stylesheet" href="tokens.css" />
+  <script>
+    if ('IntersectionObserver' in window) document.documentElement.classList.add('reveal-ready');
+  </script>
   <style>
     *,
     *::before,
@@ -550,6 +553,31 @@
       border-radius: var(--radius-md);
     }
 
+    /* ---------- SCROLL REVEAL ---------- */
+    /* Only hides content once JS has confirmed it can reveal it again. */
+    .reveal-ready [data-reveal] {
+      opacity: 0;
+      transform: translateY(32px);
+      transition:
+        opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+        transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+      transition-delay: var(--reveal-delay, 0s);
+      will-change: opacity, transform;
+    }
+
+    .reveal-ready [data-reveal].is-revealed {
+      opacity: 1;
+      transform: none;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .reveal-ready [data-reveal] {
+        opacity: 1;
+        transform: none;
+        transition: none;
+      }
+    }
+
     /* ---------- RESPONSIVE ---------- */
     @media (max-width: 1200px) {
       .case,
@@ -740,7 +768,7 @@
 
   <main id="main" class="page">
     <!-- HERO + BANNER GRID -->
-    <section class="hero" aria-labelledby="hero-title">
+    <section class="hero" data-reveal aria-labelledby="hero-title">
       <div class="hero__title">
         <h1 id="hero-title" class="hero__name">Hey, I’m Andrew Gaskell</h1>
         <p class="hero__role">UX &amp; Product Designer</p>
@@ -748,7 +776,7 @@
       <p class="hero__intro">Designer at the UK Tote Group, responsible for the organisation’s research, customer digital experience, and design system.</p>
     </section>
 
-    <div class="banner-grid">
+    <div class="banner-grid" data-reveal style="--reveal-delay: 0.15s;">
       <div class="banner-row">
         <div class="tile tile--1 tile--phones">
           <img class="tile__big" src="images/home-banner-mobile-big-1.png" width="130" height="260" style="aspect-ratio: 130 / 260;" alt="Tote mobile app screen" />
@@ -776,7 +804,7 @@
     </div>
 
     <!-- MULTIPLES -->
-    <section id="case-studies" class="case" aria-labelledby="multiples-title">
+    <section id="case-studies" class="case" data-reveal aria-labelledby="multiples-title">
       <div class="case__body">
         <div class="case__heading">
           <h2 id="multiples-title" class="case__title">Multiples</h2>
@@ -814,7 +842,7 @@
     </section>
 
     <!-- SPORTSBOOK CROSS-SELL -->
-    <section class="case" aria-labelledby="cross-sell-title">
+    <section class="case" aria-labelledby="cross-sell-title" data-reveal>
       <div class="case__body">
         <div class="case__heading">
           <h2 id="cross-sell-title" class="case__title">Sportsbook Cross-sell</h2>
@@ -853,7 +881,7 @@
     </section>
 
     <!-- MY CURRENT PROJECT -->
-    <section class="current" aria-labelledby="liyp-title">
+    <section class="current" data-reveal aria-labelledby="liyp-title">
       <div class="current__text">
         <p class="current__eyebrow">My Current Project</p>
         <div class="case__body">
@@ -883,7 +911,7 @@
     </section>
 
     <!-- DESIGN SYSTEM -->
-    <section id="design-system" class="case" aria-labelledby="ds-title">
+    <section id="design-system" class="case" data-reveal aria-labelledby="ds-title">
       <div class="case__body case__body--ds">
         <h2 id="ds-title" class="ds__title">Design System</h2>
         <p class="ds__text">Consolidated an existing design system of 537 components into a AI driven system with 142 components.</p>
@@ -898,7 +926,7 @@
     </section>
 
     <!-- PLAYGROUND -->
-    <section id="playground" class="playground" aria-labelledby="playground-title">
+    <section id="playground" class="playground" data-reveal aria-labelledby="playground-title">
       <div class="playground__header">
         <h2 id="playground-title" class="playground__title">My Playground</h2>
         <p class="playground__sub">Small projects I’ve done outside of work.</p>
@@ -925,6 +953,26 @@
       };
       toggle();
       window.addEventListener('scroll', toggle, { passive: true });
+    })();
+    (function () {
+      var items = document.querySelectorAll('[data-reveal]');
+      if (!('IntersectionObserver' in window)) return;
+      var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (reduce) {
+        items.forEach(function (el) { el.classList.add('is-revealed'); });
+        return;
+      }
+      var observer = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          // Sections already scrolled past (e.g. after a reload mid-page) show straight away.
+          var passed = !entry.isIntersecting && entry.boundingClientRect.bottom < 0;
+          if (!entry.isIntersecting && !passed) return;
+          if (passed) entry.target.style.transition = 'none';
+          entry.target.classList.add('is-revealed');
+          observer.unobserve(entry.target);
+        });
+      }, { rootMargin: '0px 0px -10% 0px', threshold: 0.12 });
+      items.forEach(function (el) { observer.observe(el); });
     })();
   </script>
 </body>
