@@ -4,7 +4,21 @@ The personal portfolio of **Andrew Gaskell**, UX Designer & Researcher at the To
 
 The site is a static, single-page-per-case-study build — hand-written HTML with embedded CSS, no build step, no JavaScript framework. It deploys to GitHub Pages directly from the repository root.
 
-**Live site:** https://gaskilinen.github.io/Portfolio/
+## Live site
+
+**[gaskilinen.github.io/Design-Portfolio](https://gaskilinen.github.io/Design-Portfolio/)**
+
+The redesigned portfolio, built from the "Andrew Gaskell Portfolio" Figma file. It includes:
+
+| Page | Link |
+|---|---|
+| Homepage | [View](https://gaskilinen.github.io/Design-Portfolio/) |
+| Multiples | [View](https://gaskilinen.github.io/Design-Portfolio/multiples.html) |
+| Sportsbook Cross Sell | [View](https://gaskilinen.github.io/Design-Portfolio/sportsbook-cross-sell.html) |
+| Lock In Your Price | [View](https://gaskilinen.github.io/Design-Portfolio/lock-in-your-price.html) |
+| Tote Design System | [View](https://gaskilinen.github.io/Design-Portfolio/tote-design-system.html) |
+
+The site is published by GitHub Pages from the `main` branch, and updates within a minute or two of each push. The previous design is kept on the [`archive/original-design`](https://github.com/Gaskilinen/Design-Portfolio/tree/archive/original-design) branch, which is not published.
 
 ## What's in the site
 
