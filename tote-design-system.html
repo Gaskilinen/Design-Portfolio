@@ -4,457 +4,269 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Tote Design System – Andrew Gaskell</title>
+  <meta name="description" content="Case study: consolidating the Tote design system from 537 components to 142, with tokens that developers and AI agents can build from." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
-    href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Lato:wght@400;500;600;700&display=swap"
+    href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Lato:wght@400;700&display=swap"
     rel="stylesheet"
   />
-  <link rel="stylesheet" href="tokens.css" />
+  <link rel="stylesheet" href="tokens.css?v=2026-11-26c" />
+  <link rel="stylesheet" href="site.css?v=2026-11-26c" />
+  <link rel="stylesheet" href="case-study.css?v=2026-11-26c" />
+  <script>
+    if ('IntersectionObserver' in window) document.documentElement.classList.add('reveal-ready');
+  </script>
   <style>
-    :root {
-      --dark: #302a3f;
-      --text: #57596b;
-      --surface: #f7f9fc;
-      --surface-token: #f5f7fb;
-      --black: #090909;
-    }
+    .section--tight { gap: var(--space-05); }
+    .stack-16 { display: flex; flex-direction: column; gap: var(--space-04); }
+    .section > .stack-16 { align-self: stretch; }
 
-    *,
-    *::before,
-    *::after {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    html { scroll-behavior: smooth; }
-
-    body {
-      font-family: "Lato", sans-serif;
-      background: #fff;
-      color: var(--black);
-      line-height: 1.5;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-    }
-
-    img { display: block; max-width: 100%; }
-    a { color: inherit; }
-
-    /* ---------- HEADER ---------- */
-    .site-header {
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 40px;
-      padding: 24px 60px;
-      background: rgba(255, 255, 255, 0.92);
-      backdrop-filter: saturate(180%) blur(10px);
-      -webkit-backdrop-filter: saturate(180%) blur(10px);
-      border-bottom: 1px solid transparent;
-      transition: border-color 0.2s ease, box-shadow 0.2s ease;
-    }
-
-    .site-header--scrolled {
-      border-bottom-color: rgba(0, 0, 0, 0.06);
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
-    }
-
-    .site-header__left {
-      display: flex;
-      align-items: center;
-      gap: 24px;
-    }
-
-    .site-header__logo {
-      font-family: "Bebas Neue", sans-serif;
-      font-size: 24px;
-      color: #000;
-      text-decoration: none;
-    }
-
-    .site-header__links {
-      display: flex;
-      gap: 40px;
-      align-items: center;
-    }
-
-    .header-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 12px;
-      color: var(--dark);
-      font-weight: 700;
-      font-size: 13px;
-      letter-spacing: -0.065px;
-      text-decoration: none;
-    }
-
-    .header-link a {
-      text-decoration: underline;
-      color: var(--dark);
-    }
-
-    /* ---------- BUTTONS ---------- */
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 8px 12px;
-      border-radius: 8px;
-      font-size: 13px;
-      font-weight: 600;
-      letter-spacing: -0.065px;
-      cursor: pointer;
-      text-decoration: none;
-      border: 1px solid transparent;
-      font-family: "Lato", sans-serif;
-      transition: background 0.2s ease, transform 0.1s ease;
-    }
-
-    .btn:hover { transform: translateY(-1px); }
-
-    .btn--secondary {
-      background: #fff;
-      color: #000;
-      border-color: var(--dark);
-    }
-
-    .btn--secondary:hover { background: #f1efee; }
-
-    .btn svg { width: 20px; height: 20px; flex-shrink: 0; }
-    .btn--back svg { transform: rotate(180deg); }
-
-    /* ---------- BODY ---------- */
-    .body-wrap {
-      max-width: 994px;
-      margin: 0 auto;
-      padding: 93px 20px 140px;
-      display: flex;
-      flex-direction: column;
-      gap: 120px;
-    }
-
-    /* ---------- HERO ---------- */
-    .hero {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 24px;
-    }
-
-    .hero__title {
-      font-family: "Bebas Neue", sans-serif;
-      font-size: 64px;
-      color: #000;
-      font-weight: 400;
-      line-height: 1.2;
-      text-transform: uppercase;
-      text-align: center;
-    }
-
-    .hero__media {
-      width: 678px;
-      aspect-ratio: 678 / 474;
-      object-fit: cover;
-    }
-
-    .hero__lede { text-align: center; }
-
-    /* ---------- LEDE ---------- */
-    .lede {
-      font-size: 24px;
-      font-weight: 500;
-      color: var(--text);
-      letter-spacing: -0.12px;
-      line-height: 1.34;
-    }
-
-    /* ---------- SECTION BLOCK ---------- */
-    .section-block {
-      display: flex;
-      flex-direction: column;
-      gap: 24px;
-    }
-
-    .section-title {
-      font-family: "Bebas Neue", sans-serif;
-      font-weight: 400;
-      font-size: 32px;
-      color: #000;
-      text-transform: uppercase;
-      line-height: 1.2;
-    }
-
-    /* ---------- IMAGES ---------- */
-    .ds-image {
-      width: 100%;
-      object-fit: cover;
-    }
-
-    .ds-image--before { aspect-ratio: 4096 / 2219; }
-    .ds-image--after { aspect-ratio: 954 / 923.5; }
-    .ds-image--palette { aspect-ratio: 757 / 485; }
-
-    .ds-image--outcome {
-      aspect-ratio: 1586 / 594;
-      border-radius: 8px;
-    }
-
-    .foundations-row {
-      display: flex;
-      gap: 60px;
-      align-items: flex-start;
-    }
-
-    .foundations-row img {
-      flex: 1;
-      min-width: 0;
-      object-fit: cover;
-      object-position: top;
-    }
-
-    .foundations-row .text-styles { aspect-ratio: 466 / 428; }
-    .foundations-row .iconography { aspect-ratio: 548 / 504; }
-
-    .tokens-panel {
-      background: var(--surface-token);
+    /* ---------- OVERVIEW ---------- */
+    .tds-hero {
       display: flex;
       justify-content: center;
+      width: 100%;
+      padding: var(--space-05) 0;
     }
 
-    .tokens-panel img {
-      width: 620px;
-      aspect-ratio: 620 / 190;
-      object-fit: cover;
-    }
+    .tds-hero img { width: 678px; max-width: calc(100% - 2 * var(--space-05)); height: auto; }
 
-    /* ---------- INSIGHT CARD ---------- */
-    .insight-card {
-      background: var(--surface);
-      border-radius: 8px;
-      padding: 16px 20px;
+    /* ---------- BEFORE & AFTER ---------- */
+    .before-after {
       display: flex;
       flex-direction: column;
-      gap: 8px;
-      font-size: 16px;
-      letter-spacing: -0.08px;
-      line-height: 1.34;
+      gap: var(--space-07);
+      width: 100%;
     }
 
-    .insight-card__title {
-      color: #000;
-      font-weight: 700;
+    .shot-panel {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-05);
+      width: 100%;
+      padding: var(--space-05);
     }
 
-    .insight-card__body { color: var(--text); }
+    .shot-panel img { width: 100%; height: auto; }
+
+    /* ---------- FOUNDATIONS ---------- */
+    /* Three images share the 844px row in Figma's proportions, each at its own aspect ratio (~226px tall). */
+    .foundations {
+      display: flex;
+      align-items: center;
+      gap: var(--space-03);
+      width: 100%;
+      padding: var(--space-05);
+    }
+
+    .foundations > * {
+      flex-basis: 0;
+      min-width: 0;
+      border-radius: var(--radius-md);
+    }
+
+    .foundations__palette { flex-grow: 352.65; height: auto; aspect-ratio: 757 / 485; object-fit: cover; }
+    .foundations__icons { flex-grow: 245.68; height: auto; aspect-ratio: 548 / 504; object-fit: cover; }
+
+    /* Figma crops the text styles image: 100.08% wide, 116.12% tall, anchored top. */
+    .foundations__type {
+      position: relative;
+      flex-grow: 245.68;
+      aspect-ratio: 466 / 428;
+      overflow: hidden;
+    }
+
+    .foundations__type img {
+      position: absolute;
+      top: 0;
+      left: -0.04%;
+      width: 100.08%;
+      max-width: none;
+      height: 116.12%;
+    }
+
+    /* ---------- TOKENISATION ---------- */
+    .tokens-panel {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--space-03);
+      width: 100%;
+      padding: var(--space-05);
+    }
+
+    .tokens-panel__image {
+      display: flex;
+      justify-content: center;
+      width: 100%;
+      background: #f5f7fb;   /* Figma raw fill; matches the screenshot's own background */
+    }
+
+    /* Figma box is 620×190 with cover fill. */
+    .tokens-panel__image img { width: 620px; max-width: 100%; height: auto; aspect-ratio: 620 / 190; object-fit: cover; }
+
+    .tokens-panel p { align-self: stretch; }
+
+    /* ---------- OUTCOMES ---------- */
+    .outcome-shot {
+      width: 100%;
+      padding: var(--space-05);
+    }
+
+    .outcome-shot img {
+      width: 100%;
+      height: auto;
+      border-radius: var(--radius-md);
+    }
 
     /* ---------- RESPONSIVE ---------- */
-    @media (max-width: 900px) {
-      .site-header {
-        padding: 16px 20px;
-        flex-wrap: wrap;
-        gap: 16px;
-      }
-      .site-header__links {
-        gap: 16px;
-        flex-wrap: wrap;
-      }
-      .body-wrap {
-        padding: 48px 20px 80px;
-        gap: 80px;
-      }
-      .hero__title { font-size: 48px; }
-      .hero__media { width: 100%; }
-      .lede { font-size: 20px; }
-      .foundations-row { flex-direction: column; gap: 24px; }
-      .foundations-row img { width: 100%; }
-      .tokens-panel img { width: 100%; }
+    @media (max-width: 768px) {
+      .foundations { flex-wrap: wrap; padding: var(--space-04); }
+      .foundations__palette { flex: 1 1 100%; }
+      .foundations__type, .foundations__icons { flex: 1 1 120px; }
+      .shot-panel, .tokens-panel, .outcome-shot { padding: var(--space-04); }
     }
   </style>
 </head>
 <body>
-  <!-- HEADER -->
-  <header class="site-header">
-    <div class="site-header__left">
-      <a class="btn btn--secondary btn--back" href="index.html">
-        <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
-          <path d="M7.5 5l5 5-5 5" stroke="#302a3f" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
-        </svg>
-        Back
-      </a>
-      <a class="site-header__logo" href="index.html">Andrew Gaskell</a>
-    </div>
+  <a class="skip-link" href="#main">Skip to content</a>
 
-    <div class="site-header__links">
-      <a class="header-link" href="mailto:andygaskell10@outlook.com">
-        <svg width="20" height="18" viewBox="0 0 20 18" fill="none" aria-hidden="true">
-          <rect x="1" y="2" width="18" height="14" rx="2" stroke="#302a3f" stroke-width="1.5" />
-          <path d="M2 3.5l8 6.5 8-6.5" stroke="#302a3f" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round" />
-        </svg>
-        <span>andygaskell10@outlook.com</span>
-      </a>
+  <header class="site-header site-header--case">
+    <a class="btn-secondary" href="index.html">
+      <span class="btn-secondary__icon"><img src="images/cs-icon-arrow-back.svg" width="11.2908" height="13.7502" alt="" /></span>
+      Back
+    </a>
 
-      <span class="header-link">
-        <svg width="20" height="20" viewBox="0 0 20 20" fill="#302a3f" aria-hidden="true">
-          <path d="M4.98 3.5A2.49 2.49 0 002.5 6a2.5 2.5 0 105 0 2.49 2.49 0 00-2.52-2.5zM3 8.5h4v10H3v-10zM9 8.5h3.8v1.37h.05c.53-1 1.83-2.07 3.77-2.07 4.03 0 4.78 2.65 4.78 6.1v5.1h-4v-4.52c0-1.08-.02-2.47-1.5-2.47-1.5 0-1.73 1.17-1.73 2.39v4.6h-4V8.5z"/>
-        </svg>
+    <ul class="site-contact" aria-label="Contact">
+      <li>
+        <a class="header-link" href="mailto:andygaskell10@outlook.com">
+          <img class="header-link__icon" src="images/home-icon-mail.svg" width="20" height="20" alt="" />
+          <span>andygaskell10@outlook.com</span>
+        </a>
+      </li>
+      <li>
         <a
-          href="https://www.linkedin.com/in/andrew-gaskell-4092a5191?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app"
+          class="header-link header-link--underline"
+          href="https://www.linkedin.com/in/andrew-gaskell-4092a5191/"
           target="_blank"
           rel="noopener"
-        >Click here for my profile</a>
-      </span>
-    </div>
+          aria-label="My LinkedIn Profile (opens in a new tab)"
+        >
+          <img class="header-link__icon" src="images/home-icon-linkedin.svg" width="20" height="20" alt="" />
+          <span>My LinkedIn Profile</span>
+        </a>
+      </li>
+    </ul>
   </header>
 
-  <main class="body-wrap">
-    <!-- HERO -->
-    <section class="hero">
-      <h1 class="hero__title">Tote Design System</h1>
-      <img
-        class="hero__media"
-        src="images/ds-header.png"
-        alt="Tote design system primary and secondary colour swatches"
-      />
-      <p class="lede hero__lede">
-        Building a AI compatible Design System which is Developer, Stakeholder
-        and Designer friendly. Reducing a 537 component library to 142, sped
-        up development and built consistency.
-      </p>
-    </section>
+  <div class="cs">
+    <nav class="side-nav" aria-label="Case study sections" data-scrollspy>
+      <ul>
+        <li><a href="#overview">Overview</a></li>
+        <li><a href="#before">Before</a></li>
+        <li><a href="#after">After</a></li>
+        <li><a href="#why">Why I Built It</a></li>
+        <li><a href="#foundations">Foundations</a></li>
+        <li><a href="#tokenisation">Tokenisation</a></li>
+        <li><a href="#outcomes">Outcomes</a></li>
+      </ul>
+    </nav>
 
-    <!-- BEFORE -->
-    <section class="section-block">
-      <h2 class="section-title">Before</h2>
-      <img
-        class="ds-image ds-image--before"
-        src="images/ds-before.png"
-        alt="The component library before consolidation"
-      />
-    </section>
+    <main id="main" class="cs-main">
+      <!-- OVERVIEW -->
+      <section id="overview" class="section" aria-labelledby="cs-title" data-reveal>
+        <div class="overview__header">
+          <h1 id="cs-title" class="overview__title">Tote Design System</h1>
+          <p class="t-18 muted w-660">Building an AI-compatible design system that is developer, stakeholder and designer friendly. Reducing a 537-component library to 142 sped up development and built consistency.</p>
+        </div>
+        <div class="tds-hero panel">
+          <img src="images/tds-hero.png" width="678" height="474" alt="Brand and semantic colour cards: primary red #EB0024, secondary slate #362237, tertiary yellow #FAC83D, success green #219030, alert orange #F29A37 and error red #CC1330" />
+        </div>
+      </section>
 
-    <!-- AFTER -->
-    <section class="section-block">
-      <h2 class="section-title">After</h2>
-      <img
-        class="ds-image ds-image--after"
-        src="images/ds-after.png"
-        alt="The consolidated primary button component with tokens"
-      />
-    </section>
-
-    <!-- WHY -->
-    <section class="section-block">
-      <h2 class="section-title">Why I created the design system</h2>
-      <p class="lede">
-        Even being in a team of three, consistency can be challenging without
-        guidelines and rules. Furthermore, if designers can’t find components
-        in their systems, how can we assume developers and stakeholders can.
-      </p>
-      <p class="lede">
-        By consolidating components, building tokens, and collaborating with
-        developers, the design system became a source of truth. This quickened
-        development and decreased the gap between design and build as
-        designers could directly contribute to the code.
-      </p>
-    </section>
-
-    <!-- FOUNDATIONS -->
-    <section class="section-block">
-      <h2 class="section-title">Foundations</h2>
-      <img
-        class="ds-image ds-image--palette"
-        src="images/ds-colour-palette.png"
-        alt="Tote colour palette"
-      />
-      <p class="lede">
-        The existing brand guidelines were tricky to use for a designer. The
-        primary red did not pass accessibility guidelines when used as a
-        background for white text. Using too many colours can become
-        distracting and confusing to customers.
-      </p>
-      <div class="foundations-row">
-        <img
-          class="text-styles"
-          src="images/ds-text-styles.png"
-          alt="Text styles"
-        />
-        <img
-          class="iconography"
-          src="images/ds-iconography.png"
-          alt="Iconography set"
-        />
+      <!-- BEFORE & AFTER -->
+      <div class="before-after">
+        <section id="before" class="shot-panel panel" aria-labelledby="before-title" data-reveal>
+          <h2 id="before-title" class="h-sub">Before</h2>
+          <img src="images/tds-before.png" width="868" height="470" loading="lazy" alt="The original button components: primary, secondary and games buttons spread across loosely grouped frames with no shared structure" />
+        </section>
+        <section id="after" class="shot-panel panel" aria-labelledby="after-title" data-reveal>
+          <h2 id="after-title" class="h-sub">After</h2>
+          <img src="images/tds-after.png" width="868" height="840" loading="lazy" alt="The rebuilt primary button documentation: usage guidance, default, hover, pressed, active and loading states, a dev mode CSS panel and the tokens it uses" />
+        </section>
       </div>
-    </section>
 
-    <!-- TOKENISATION -->
-    <section class="section-block">
-      <h2 class="section-title">Tokenisation</h2>
-      <div class="tokens-panel">
-        <img
-          src="images/ds-tokens.png"
-          alt="Token structure: element.tone.emphasis.state"
-        />
-      </div>
-      <p class="lede">
-        The tokens are four words that describe the context and how to use
-        each component and colour on an interface. This creates consistency as
-        it removes designers guessing how to use these components.
-      </p>
-      <p class="lede">
-        Working with developers to build the taxonomy meant that the design
-        system was aligned with how the components were created in code, This
-        facilitated AI agents to read and build the components within the
-        guidelines set by the design system.
-      </p>
-    </section>
+      <!-- WHY -->
+      <section id="why" class="section section--tight" aria-labelledby="why-title" data-reveal>
+        <h2 id="why-title" class="h-section">Why I Created The Design System</h2>
+        <p class="t-14 muted w-636">Even being in a team of three, consistency can be challenging without guidelines and rules. Furthermore, if designers can’t find components in their systems, how can we assume developers and stakeholders can?</p>
+        <p class="t-14 muted w-636">By consolidating components, building tokens, and collaborating with developers, the design system became a source of truth. This quickened development and decreased the gap between design and build as designers could directly contribute to the code.</p>
+      </section>
 
-    <!-- OUTCOMES -->
-    <section class="section-block">
-      <h2 class="section-title">Outcomes</h2>
-      <div class="insight-card">
-        <p class="insight-card__title">Unlocking AI</p>
-        <p class="insight-card__body">
-          Building the guidelines and naming conventions that AI can read and
-          produce sped up development, but did not sacrifice consistency of
-          quality as it created a frame that AI could work within rather than
-          it filling in the blanks.
-        </p>
-      </div>
-      <div class="insight-card">
-        <p class="insight-card__title">Source of Truth</p>
-        <p class="insight-card__body">
-          Developers and stakeholders had one document where they could find
-          components rather than trying to find them in out-dated user flows.
-        </p>
-      </div>
-      <img
-        class="ds-image ds-image--outcome"
-        src="images/ds-outcome.png"
-        alt="Design system documentation used by developers and stakeholders"
-      />
-    </section>
-  </main>
+      <!-- FOUNDATIONS -->
+      <section id="foundations" class="section" aria-labelledby="foundations-title" data-reveal>
+        <div class="stack-16">
+          <h2 id="foundations-title" class="h-section">Foundations</h2>
+          <p class="t-14 muted w-636">The existing brand guidelines were tricky to use for a designer. The primary red did not pass accessibility guidelines when used as a background for white text. Using too many colours can become distracting and confusing to customers.</p>
+        </div>
+        <div class="foundations panel">
+          <img class="foundations__palette" src="images/tds-colour-palette.png" width="757" height="485" loading="lazy" alt="Colour palette: a large primary red, dark slate, white and light grey, with a row of red, orange, yellow, pink, green and blue accents" />
+          <div class="foundations__type">
+            <img src="images/tds-text-styles.png" width="518" height="552" loading="lazy" alt="Text styles from headline-display 48 down to body-md-light 14/20" />
+          </div>
+          <img class="foundations__icons" src="images/tds-iconography.png" width="548" height="504" loading="lazy" alt="The core_icons_lg icon set, including arrows, edit, mail, visibility and share icons" />
+        </div>
+      </section>
 
-  <script>
-    (function () {
-      var header = document.querySelector('.site-header');
-      if (!header) return;
-      var toggle = function () {
-        if (window.scrollY > 8) {
-          header.classList.add('site-header--scrolled');
-        } else {
-          header.classList.remove('site-header--scrolled');
-        }
-      };
-      toggle();
-      window.addEventListener('scroll', toggle, { passive: true });
-    })();
-  </script>
+      <!-- TOKENISATION -->
+      <section id="tokenisation" class="section" aria-labelledby="tokenisation-title" data-reveal>
+        <div class="stack-16">
+          <h2 id="tokenisation-title" class="h-section">Tokenisation</h2>
+          <p class="t-14 muted w-636">The tokens are four words that describe the context and how to use each component and colour on an interface. This creates consistency as it removes designers guessing how to use these components.</p>
+        </div>
+        <div class="tokens-panel panel">
+          <div class="tokens-panel__image">
+            <img src="images/tds-tokenisation.png" width="620" height="190" loading="lazy" alt="Token naming structure: element.tone.emphasis.state, with each part labelled Element, Tone, Emphasis and State" />
+          </div>
+          <p class="t-14 text-600">Working with developers to build the taxonomy meant that the design system was aligned with how the components were created in code. This facilitated AI agents to read and build the components within the guidelines set by the design system.</p>
+        </div>
+      </section>
+
+      <!-- OUTCOMES -->
+      <section id="outcomes" class="section section--tight" aria-labelledby="outcomes-title" data-reveal>
+        <h2 id="outcomes-title" class="h-section">Outcomes</h2>
+        <div class="decisions">
+          <div class="reflection">
+            <div class="reflection__title stack-12">
+              <h3 class="t-18 nowrap">Unlocking AI</h3>
+              <p class="t-14 muted">Introducing Tokenisation</p>
+            </div>
+            <blockquote class="reflection__quote panel">
+              <span class="reflection__mark" aria-hidden="true">“</span>
+              <p class="t-14 text-600">Building the guidelines and naming conventions that AI can read and produce sped up development, but did not sacrifice consistency of quality as it created a frame that AI could work within rather than it filling in the blanks.</p>
+              <span class="reflection__mark" aria-hidden="true">“</span>
+            </blockquote>
+          </div>
+          <div class="reflection">
+            <div class="reflection__title stack-12">
+              <h3 class="t-18 nowrap">Source of Truth</h3>
+              <p class="t-14 muted">All components are linked to the design system</p>
+            </div>
+            <blockquote class="reflection__quote panel">
+              <span class="reflection__mark" aria-hidden="true">“</span>
+              <p class="t-14 text-600">Developers and stakeholders had one document where they could find components rather than trying to find them in outdated user flows.</p>
+              <span class="reflection__mark" aria-hidden="true">“</span>
+            </blockquote>
+          </div>
+        </div>
+        <div class="outcome-shot panel">
+          <img src="images/tds-outcome.png" width="868" height="325" loading="lazy" alt="A Grab ’n’ Go organism and the Horse Selector component it is built from, with lock and pool price variants" />
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="site.js?v=2026-11-26c"></script>
 </body>
 </html>
