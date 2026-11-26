@@ -120,3 +120,72 @@
   --accent-tint:         var(--color-slate-200);    /* #fef8ff — accent background tint */
 
 }
+
+/* ============================================================
+   3. PORTFOLIO TOKENS
+   Source: Andrew Gaskell Portfolio (Figma)
+   https://www.figma.com/design/G60YVGNIV7HhDrotTl51dK/
+   This file uses its own Aubergine / Neutral palette, so it
+   lives apart from the Tote ramps above rather than renaming them.
+   ============================================================ */
+
+:root {
+
+  /* ── Primitives — Aubergine ── */
+  --color-aubergine-500: #625878;   /* Figma: Primary (aubergine)/500 */
+  --color-aubergine-800: #302a3f;   /* Figma: Primary (aubergine)/800 */
+
+  /* ── Primitives — Neutral ── */
+  --color-neutral-000:  #ffffff;    /* Figma: Grey/00, surface/primary */
+  --color-neutral-100:  #f3f4f8;    /* Figma: Grey/100 */
+  --color-neutral-300:  #d2d4d8;    /* Figma: Grey/300 */
+  --color-neutral-400:  #c7c7d0;    /* Figma: chip border (raw value) */
+  --color-neutral-500:  #8d8f92;    /* Figma: Grey/500, teritary */
+  --color-neutral-600:  #57596b;    /* Figma: Multiples body copy (raw value) */
+  --color-neutral-900:  #1d1e20;    /* Figma: primary */
+  --color-neutral-1000: #000000;    /* Figma: black headings */
+
+  /* ── Primitives — Success ── */
+  --color-success-portfolio: #3f8f6b; /* Figma: Semantic/success */
+
+  /* ── Semantic ── */
+  --pf-surface:          var(--color-neutral-000);
+  --pf-surface-muted:    var(--color-neutral-100);
+  --pf-text-strong:      var(--color-neutral-1000);
+  --pf-text-primary:     var(--color-neutral-900);
+  --pf-text-brand:       var(--color-aubergine-800);
+  --pf-text-accent:      var(--color-aubergine-500);
+  --pf-text-tertiary:    var(--color-neutral-500);
+  --pf-text-chip:        var(--color-grey-800);      /* Figma buttons/secondary/text #626567 — exact reuse */
+  --pf-text-positive:    var(--color-success-portfolio);
+  --pf-border-divider:   var(--color-neutral-300);
+  --pf-border-chip:      var(--color-neutral-400);
+  --pf-action-primary:   var(--color-aubergine-800);
+  --pf-action-hover:     var(--color-aubergine-500);
+
+  /* ── Spacing (Figma 01–11) ── */
+  --space-01: 4px;
+  --space-02: 8px;
+  --space-03: 12px;
+  --space-04: 16px;
+  --space-05: 24px;
+  --space-06: 32px;
+  --space-07: 48px;
+  --space-08: 64px;
+  --space-09: 96px;
+  --space-11: 160px;
+
+  /* ── Radius ── */
+  --radius-md: 8px;
+
+  /* ── Type (Figma text styles, DM Sans, line-height normal) ── */
+  --font-sans:            "DM Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-ui:              "Lato", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-size-display:    61px;  /* Display — SemiBold */
+  --font-size-h1:         49px;  /* H1 — SemiBold */
+  --font-size-h3:         31px;  /* H3 — Medium */
+  --font-size-body-lg:    20px;  /* body_large — Medium */
+  --font-size-body:       18px;  /* body — Regular */
+  --font-size-body-sm:    14px;  /* body_small / body_small_emphasis */
+  --font-size-label:      13px;  /* label — Medium */
+}
