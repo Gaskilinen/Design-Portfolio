@@ -105,7 +105,7 @@ Key tokens:
 
 ### After changing shared CSS or JS
 
-Pages load the shared files with a version tag, for example `site.css?v=2026-11-26c`, so returning visitors get the new files rather than cached copies. When you change `tokens.css`, `site.css`, `case-study.css` or `site.js`, update the tag in every page's `<head>` and before `</body>`.
+Pages load the shared files with a version tag, for example `site.css?v=2026-11-26d`, so returning visitors get the new files rather than cached copies. When you change `tokens.css`, `site.css`, `case-study.css` or `site.js`, update the tag in every page's `<head>` and before `</body>`.
 
 ### Adding a case study
 

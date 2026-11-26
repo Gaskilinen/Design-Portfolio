@@ -16,6 +16,15 @@
     items.forEach(function (el) { el.classList.add('is-revealed'); });
     return;
   }
+  // data-reveal="load" fades in as soon as the page loads, whether or not it is on screen yet
+  // (used for the first row of the homepage banner, which can sit right at the fold).
+  var onLoad = Array.prototype.filter.call(items, function (el) { return el.getAttribute('data-reveal') === 'load'; });
+  requestAnimationFrame(function () {
+    requestAnimationFrame(function () {
+      onLoad.forEach(function (el) { el.classList.add('is-revealed'); });
+    });
+  });
+  items = Array.prototype.filter.call(items, function (el) { return el.getAttribute('data-reveal') !== 'load'; });
   var observer = new IntersectionObserver(function (entries) {
     entries.forEach(function (entry) {
       // Sections already scrolled past (e.g. after a reload mid-page) show straight away.
