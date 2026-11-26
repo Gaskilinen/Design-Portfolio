@@ -4,1230 +4,631 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Multiples – Andrew Gaskell</title>
+  <meta name="description" content="Case study: redesigning the Tote betslip to offer multiples, a bet type no other pool operator in the world has built." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
-    href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Lato:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Roboto:wght@500&display=swap"
+    href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Lato:wght@400;700&display=swap"
     rel="stylesheet"
   />
   <link rel="stylesheet" href="tokens.css" />
+  <link rel="stylesheet" href="site.css" />
+  <link rel="stylesheet" href="case-study.css" />
+  <script>
+    if ('IntersectionObserver' in window) document.documentElement.classList.add('reveal-ready');
+  </script>
   <style>
-    :root {
-      --dark: #302a3f;
-      --text: #4a4d5e;
-      --text-secondary: #626567;
-      --muted: #7a7a7a;
-      --surface: #f7f9fc;
-      --border: #c7c7d0;
-      --divider: #d8d6e5;
-      --black: #090909;
-      --metric-bg: #302a3f;
-      --metric-number: #f1f1ff;
-      --metric-label: #d7daf5;
-      --brand-red: #eb0024;
-    }
+    .text-600 { color: var(--color-neutral-600); }   /* Figma raw #57596b, as on the homepage Multiples card */
+    .nowrap { white-space: nowrap; }
 
-    *,
-    *::before,
-    *::after {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    html { scroll-behavior: smooth; }
-
-    body {
-      font-family: "Lato", sans-serif;
-      background: #fff;
-      color: var(--black);
-      line-height: 1.5;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-    }
-
-    img { display: block; max-width: 100%; }
-    a { color: inherit; }
-
-    /* ---------- HEADER ---------- */
-    .site-header {
-      position: sticky;
-      top: 0;
-      z-index: 100;
+    /* ---------- OVERVIEW ---------- */
+    .hero-pair {
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      gap: 40px;
-      padding: 24px 60px;
-      background: rgba(255, 255, 255, 0.92);
-      backdrop-filter: saturate(180%) blur(10px);
-      -webkit-backdrop-filter: saturate(180%) blur(10px);
-      border-bottom: 1px solid transparent;
-      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+      justify-content: center;
+      gap: var(--space-05);
+      width: 100%;
+      padding: var(--space-05) 0;
     }
 
-    .site-header--scrolled {
-      border-bottom-color: rgba(0, 0, 0, 0.06);
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
-    }
+    .hero-pair img { flex: none; object-fit: cover; }
+    .hero-pair img:first-child { width: 232px; height: 475px; }
+    .hero-pair img:last-child { width: 162px; height: 383px; }
 
-    .site-header__left {
-      display: flex;
-      align-items: center;
-      gap: 24px;
-    }
-
-    .site-header__logo {
-      font-family: "Bebas Neue", sans-serif;
-      font-size: 24px;
-      color: #000;
-      text-decoration: none;
-    }
-
-    .site-header__links {
-      display: flex;
-      gap: 40px;
-      align-items: center;
-    }
-
-    .header-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 12px;
-      color: var(--dark);
-      font-weight: 700;
-      font-size: 13px;
-      letter-spacing: -0.065px;
-      text-decoration: none;
-    }
-
-    .header-link a,
-    .header-link span.underline {
-      text-decoration: underline;
-      color: var(--dark);
-    }
-
-    /* ---------- BUTTONS ---------- */
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 8px 12px;
-      border-radius: 8px;
-      font-size: 13px;
-      font-weight: 600;
-      letter-spacing: -0.065px;
-      cursor: pointer;
-      text-decoration: none;
-      border: 1px solid transparent;
-      font-family: "Lato", sans-serif;
-      transition: background 0.2s ease, transform 0.1s ease;
-    }
-
-    .btn:hover { transform: translateY(-1px); }
-
-    .btn--secondary {
-      background: #fff;
-      color: #000;
-      border-color: var(--dark);
-    }
-
-    .btn--secondary:hover { background: #f1efee; }
-
-    .btn svg { width: 20px; height: 20px; flex-shrink: 0; }
-    .btn--back svg { transform: rotate(180deg); }
-
-    /* ---------- BODY ---------- */
-    .body-wrap {
-      max-width: 954px;
-      margin: 0 auto;
-      padding: 60px 20px 140px;
+    /* ---------- RESEARCH ---------- */
+    .research-card {
       display: flex;
       flex-direction: column;
-      gap: 120px;
+      gap: var(--space-05);
+      padding: var(--space-05);
     }
 
-    /* ---------- HERO ---------- */
-    .hero {
+    .research-card--survey {
+      align-self: stretch;
+      width: 447px;
+    }
+
+    /* Figma sizes images as fixed boxes with cover fill. */
+    .research-card img { flex: none; object-fit: cover; }
+    .research-card--survey > img { width: 399px; height: 380px; }
+
+    /* Insight text wraps to the card's image width instead of widening the card. */
+    .research-card .stack-8 { width: 0; min-width: 100%; }
+
+    .shots {
       display: flex;
-      align-items: center;
-      gap: 61px;
-      min-height: 312px;
+      gap: var(--space-05);
     }
 
-    .hero__media {
-      position: relative;
-      width: 452px;
-      height: 546px;
-      flex-shrink: 0;
-    }
+    .shots img { width: 175px; height: 380px; }
 
-    .hero__media img {
-      position: absolute;
-      object-fit: cover;
-    }
-
-    .hero__media .img-back {
-      left: 0;
-      top: 52px;
-      width: 243px;
-      height: 429px;
-    }
-
-    .hero__media .img-front {
-      left: 144px;
-      top: 0;
-      width: 308px;
-      height: 546px;
-    }
-
-    .hero__title {
-      font-family: "Bebas Neue", sans-serif;
-      font-size: 64px;
-      color: #000;
-      font-weight: 400;
-      line-height: 1;
-      text-transform: uppercase;
-      max-width: 409px;
-    }
-
-    /* ---------- LEDE ---------- */
-    .lede {
-      font-size: 32px;
-      font-weight: 500;
-      color: var(--text);
-      letter-spacing: -0.16px;
-      line-height: 1.34;
-    }
-    .lede strong { font-weight: 700; color: var(--text); }
-
-    /* ---------- INFO TABLE ---------- */
-    .info-table {
+    /* ---------- STEP FLOWS (design process, user journey) ---------- */
+    .flow {
       display: flex;
-      flex-direction: column;
-      border-top: 1px solid var(--divider);
-    }
-
-    .info-row {
-      display: flex;
-      gap: 123px;
       align-items: flex-start;
-      padding: 24px 0;
-      border-bottom: 1px solid var(--divider);
-      font-size: 16px;
-      letter-spacing: -0.08px;
-      line-height: 1.34;
+      gap: var(--space-03);
+      padding: var(--space-05);
     }
 
-    .info-row__label {
-      width: 210px;
-      color: var(--muted);
-      flex-shrink: 0;
-    }
-
-    .info-row__value {
-      color: var(--text);
-      flex: 1;
-    }
-
-    .info-row__value ul {
-      list-style: disc;
-      padding-left: 24px;
+    .flow__step {
       display: flex;
       flex-direction: column;
-      gap: 4px;
-    }
-
-    .info-row__value ul li { line-height: 1.44; }
-
-    /* ---------- SECTION BLOCK ---------- */
-    .section-block {
-      display: flex;
-      flex-direction: column;
-      gap: 24px;
-    }
-
-    .section-block--lg { gap: 40px; }
-
-    .section-title {
-      font-family: "Bebas Neue", sans-serif;
-      font-weight: 400;
-      font-size: 32px;
-      color: #000;
-      text-transform: uppercase;
-      line-height: 1;
-    }
-
-    /* ---------- PROSE WIDTH CONSTRAINT ---------- */
-    .prose { max-width: 680px; }
-
-    /* ---------- SECTION EYEBROW (01 — CONTEXT) ---------- */
-    .section-head {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .section-eyebrow {
-      display: inline-flex;
       align-items: center;
-      gap: 12px;
-      font-family: "Lato", sans-serif;
-      font-size: 12px;
-      font-weight: 700;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 0.14em;
+      gap: var(--space-04);
+      width: 203px;
     }
 
-    .section-eyebrow__num {
-      color: var(--dark);
-      font-weight: 700;
-    }
+    /* Captions fill the step so every caption box ends level with the tallest one. */
+    .flow--captioned .flow__step { align-self: stretch; }
 
-    .section-eyebrow__rule {
-      display: inline-block;
-      width: 28px;
-      height: 1px;
-      background: currentColor;
-      opacity: 0.5;
-    }
+    .flow__step img { width: 100%; height: auto; }
 
-    /* ---------- AT-A-GLANCE STRIP ---------- */
-    .at-a-glance {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      border-top: 1px solid var(--divider);
-      border-bottom: 1px solid var(--divider);
-    }
+    .flow__step .chip { flex: none; }
 
-    .at-a-glance__cell {
-      padding: 20px 24px;
+    .flow__caption {
       display: flex;
+      flex: 1 1 auto;
       flex-direction: column;
-      gap: 6px;
-      border-right: 1px solid var(--divider);
-    }
-
-    .at-a-glance__cell:last-child { border-right: none; }
-
-    .at-a-glance__label {
-      font-size: 11px;
-      font-weight: 700;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-    }
-
-    .at-a-glance__value {
-      font-size: 15px;
-      color: var(--black);
-      font-weight: 500;
-      line-height: 1.4;
-    }
-
-    .at-a-glance__value--highlight {
-      color: var(--dark);
-      font-weight: 700;
-      font-size: 20px;
-      letter-spacing: -0.1px;
-    }
-
-    .section-subtitle {
-      font-family: "Bebas Neue", sans-serif;
-      font-weight: 400;
-      font-size: 24px;
-      color: #000;
-      text-transform: uppercase;
-      line-height: 1;
-    }
-
-    .pull-quote {
-      font-size: 32px;
-      font-weight: 500;
-      color: var(--text);
-      letter-spacing: -0.16px;
-      line-height: 1.34;
-    }
-
-    .two-col {
-      display: flex;
-      gap: 20px;
-      align-items: flex-start;
-    }
-
-    .two-col > * {
-      flex: 1;
-      font-size: 16px;
-      color: var(--text);
-      letter-spacing: -0.08px;
-      line-height: 1.34;
-    }
-
-    .two-col strong { font-weight: 700; }
-
-    .callout {
-      background: var(--surface);
-      border-radius: 8px;
-      padding: 12px 32px;
-      font-size: 16px;
-      font-weight: 500;
-      color: var(--text);
-      letter-spacing: -0.08px;
-      line-height: 1.34;
-    }
-
-    /* ---------- GOALS ---------- */
-    .goals {
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-      font-size: 16px;
-      color: var(--text);
-      letter-spacing: -0.08px;
-      line-height: 1.34;
-    }
-
-    .goals__row {
-      display: flex;
-      gap: 20px;
-      align-items: flex-start;
-    }
-
-    .goals__label {
-      width: 128px;
-      flex-shrink: 0;
-    }
-
-    .goals__value { flex: 1; white-space: pre-wrap; }
-
-    /* ---------- RESEARCH / IMAGE + NOTES ---------- */
-    .research-row {
-      display: flex;
-      gap: 20px;
-      align-items: flex-start;
-    }
-
-    .research-row__image {
-      width: 340px;
-      height: 323px;
-      flex-shrink: 0;
-      border-radius: 8px;
-      object-fit: cover;
-    }
-
-    .research-row__notes {
-      flex: 1;
-      min-width: 0;
-      display: flex;
-      flex-direction: column;
-      gap: 30px;
-      font-size: 16px;
-      color: var(--text);
-      letter-spacing: -0.08px;
-      line-height: 1.34;
-      counter-reset: research;
-    }
-
-    .research-row__notes li {
-      padding-left: 24px;
-      position: relative;
+      gap: var(--space-03);
+      align-self: stretch;
       list-style: none;
     }
 
-    .research-row__notes li::before {
-      counter-increment: research;
-      content: counter(research) ".";
+    .flow__point {
+      display: flex;
+      align-items: center;
+      gap: var(--space-02);
+    }
+
+    .flow__point img { flex: none; width: 20px; height: 20px; }
+
+    /* Figma's arrow is a 100px line at the top of the row; its end caps overhang the line box. */
+    .flow__arrow {
+      position: relative;
+      flex: none;
+      width: 100px;
+      height: 0;
+    }
+
+    .flow__arrow img {
       position: absolute;
-      left: 0;
-      top: 0;
+      top: -3.68px;
+      left: -2.89px;
+      max-width: none;
     }
 
-    /* ---------- INSIGHT CARDS (generic) ---------- */
-    .insight-card {
-      background: var(--surface);
-      border-radius: 8px;
-      padding: 16px 20px;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      font-size: 16px;
-      letter-spacing: -0.08px;
-      line-height: 1.34;
-    }
-
-    .insight-card__title {
-      color: #000;
-      font-weight: 700;
-    }
-
-    .insight-card__quote {
-      color: var(--text);
-      font-style: italic;
-    }
-
-    .insight-card__body { color: var(--text); }
-
-    /* reflections (larger, with sub-lists) */
-    .reflection-card ul {
-      list-style: disc;
-      padding-left: 24px;
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-      color: var(--text);
-    }
-
-    .reflection-card__label {
-      color: var(--text);
-      font-style: italic;
-      margin-top: 4px;
-    }
-
-    /* ---------- EXPLORATION ---------- */
-    .exploration-body {
-      display: flex;
-      gap: 20px;
-      align-items: flex-start;
-    }
-
-    .exploration-body img.explore-screens {
-      width: 710px;
-      height: 431px;
-      object-fit: cover;
-      flex-shrink: 0;
-      border-radius: 4px;
-    }
-
-    .exploration-body__notes {
-      flex: 1;
-      min-width: 0;
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-      font-size: 12px;
-      color: var(--text);
-      letter-spacing: -0.06px;
-      line-height: 1.34;
-    }
-
-    .exploration-body__feedback {
-      font-size: 14px;
-      font-weight: 700;
-      color: var(--text);
-      letter-spacing: -0.07px;
-      line-height: 1.34;
-      white-space: pre-wrap;
-    }
-
-    .user-testing-video {
-      width: 100%;
-      aspect-ratio: 16 / 9;
-      border-radius: 8px;
-      background: #000;
-      display: block;
-      object-fit: cover;
-      box-shadow: 0 4px 24.5px rgba(0, 0, 0, 0.12);
-    }
-
-    /* ---------- USER JOURNEY ---------- */
-    .user-journey__image {
+    /* ---------- VALIDATION ---------- */
+    .interview {
       width: 100%;
       height: auto;
-      aspect-ratio: 954 / 549;
+      aspect-ratio: 1920 / 1032;
       object-fit: cover;
-      border-radius: 8px;
+      border-radius: var(--radius-md);
     }
 
-    .user-journey__lead {
-      font-weight: 500;
-      color: var(--text);
-      font-size: 16px;
-      letter-spacing: -0.08px;
+    .insights {
+      width: 100%;
+      padding: var(--space-05);
     }
 
+    .insights .learning {
+      flex: 1 1 0;
+      min-width: 0;
+    }
+
+    .insights .learning ul { width: 100%; }
+    .insights .learning .li-narrow { max-width: 203px; }   /* Figma: 224px list incl. 21px indent */
+
+    .learning__title--positive { color: var(--pf-text-positive); }
+    .learning__title--negative { color: var(--pf-text-negative); }
+
+    /* ---------- ITERATIONS ---------- */
+    .iterations {
+      display: flex;
+      align-items: flex-start;
+      gap: var(--space-07);
+      width: 100%;
+    }
+
+    .iterations__body {
+      flex: 1 1 0;
+      min-width: 0;
+    }
+
+    .iterations__examples {
+      display: flex;
+      align-items: center;
+      gap: var(--space-06);
+    }
+
+    .iterations__examples figure {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--space-03);
+    }
+
+    .iterations__examples img { width: 272px; height: auto; }
+
+    /* ---------- KEY DESIGN DECISIONS ---------- */
     .decisions {
       display: flex;
       flex-direction: column;
-      gap: 16px;
-      counter-reset: decisions;
-      font-size: 16px;
-      color: var(--text);
-      letter-spacing: -0.08px;
-      line-height: 1.34;
-      list-style: none;
-      padding-left: 0;
+      gap: var(--space-05);
+      width: 100%;
     }
 
-    .decisions__item {
-      padding-left: 24px;
-      position: relative;
-    }
+    .reflection__quote p.text-600 { color: var(--color-neutral-600); }
+    .reflection__quote p.secondary { color: var(--pf-text-secondary); }
 
-    .decisions__item::before {
-      counter-increment: decisions;
-      content: counter(decisions) ".";
-      position: absolute;
-      left: 0;
-      top: 0;
-    }
-
-    .decisions__item strong { font-weight: 700; }
-
-    /* ---------- METRIC CARDS (Results & Impact) ---------- */
-    .metrics {
+    /* ---------- NEXT STEPS ---------- */
+    .next-step {
       display: flex;
-      gap: 24px;
-      align-items: stretch;
+      align-items: flex-start;
+      gap: var(--space-07);
+      width: 100%;
     }
 
-    .metric {
-      flex: 1;
+    .next-step__body {
+      flex: 1 1 0;
       min-width: 0;
-      background: var(--metric-bg);
-      border-radius: 8px;
-      padding: 24px;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
     }
 
-    .metric__number {
-      color: var(--metric-number);
-      font-size: 36px;
-      font-weight: 700;
-      letter-spacing: -0.18px;
-      line-height: 1.34;
+    .next-step__example {
+      flex: none;
+      padding: var(--space-05) var(--space-08);
     }
 
-    .metric__label {
-      color: var(--metric-label);
-      font-size: 20px;
-      letter-spacing: -0.1px;
-      line-height: 1.34;
-    }
-
-    .metric__sublabel {
-      color: var(--metric-label);
-      font-size: 14px;
-      letter-spacing: -0.07px;
-      line-height: 1.34;
-    }
-
-    /* ---------- NEXT STEPS – QUICKBET MOCKUP ---------- */
-    .next-callout {
-      background: var(--surface);
-      border-radius: 8px;
-      padding: 12px 32px;
-      display: flex;
-      gap: 20px;
-      align-items: center;
-    }
-
-    .next-callout__text {
-      flex: 1;
-      font-size: 16px;
-      color: var(--text);
-      letter-spacing: -0.08px;
-      line-height: 1.34;
-    }
-
-    .quickbet {
-      width: 199px;
-      flex-shrink: 0;
-      font-family: "Roboto", sans-serif;
-    }
-
-    .quickbet__panel {
-      background: #fff;
-      border-radius: 10px 10px 0 0;
-      padding: 13px 6px 6px;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .quickbet__top {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding-right: 6px;
-    }
-
-    .quickbet__selection {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-    }
-
-    .quickbet__header {
-      display: flex;
-      gap: 4px;
-      align-items: center;
-      font-weight: 500;
-      font-size: 8.5px;
-      line-height: 12.7px;
-    }
-
-    .quickbet__label { color: #221414; }
-    .quickbet__price { color: var(--brand-red); }
-
-    .quickbet__runners {
-      color: var(--text-secondary);
-      font-size: 6.4px;
-      font-weight: 500;
-      line-height: 9.6px;
-    }
-
-    .quickbet__arrows {
-      width: 10.6px;
-      height: 10.6px;
-      color: #221414;
-      display: grid;
-      place-items: center;
-    }
-
-    .quickbet__row {
-      display: flex;
-      gap: 6.4px;
-    }
-
-    .quickbet__stake {
-      flex: 1;
-      border: 0.3px solid #c4c4c4;
-      border-radius: 4.2px;
-      padding: 0 0 0 4px;
-      display: flex;
-      gap: 3px;
-      align-items: center;
-      font-size: 8.5px;
-      font-weight: 500;
-    }
-
-    .quickbet__stake .currency { color: var(--text-secondary); }
-    .quickbet__stake .placeholder { color: #221414; }
-
-    .quickbet__btn {
-      flex: 0 0 116px;
-      height: 25px;
-      background: var(--brand-red);
-      color: #fff;
-      border-radius: 4.2px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 8.5px;
-      font-weight: 500;
-      line-height: 12.7px;
-    }
-
-    .quickbet__home-indicator {
-      height: 18px;
-      position: relative;
-    }
-
-    .quickbet__home-indicator::after {
-      content: "";
-      position: absolute;
-      bottom: 4px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 71px;
-      height: 2.7px;
-      background: #000;
-      border-radius: 53px;
-    }
+    .next-step__example img { width: 322px; height: 526px; object-fit: cover; }
 
     /* ---------- RESPONSIVE ---------- */
+    @media (max-width: 1100px) {
+      .iterations,
+      .next-step { flex-direction: column; }
+
+      .iterations__body,
+      .next-step__body { flex: none; width: 100%; }
+    }
+
     @media (max-width: 900px) {
-      .site-header {
-        padding: 16px 20px;
-        flex-wrap: wrap;
-        gap: 16px;
-      }
-      .site-header__links {
-        gap: 16px;
-        flex-wrap: wrap;
-      }
-      .body-wrap {
-        padding: 48px 20px 80px;
-        gap: 80px;
-      }
-      .hero {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-      .hero__media {
-        width: 100%;
-        height: 460px;
-      }
-      .hero__media .img-back { left: 0; }
-      .hero__media .img-front { left: 40%; }
-      .hero__title { font-size: 48px; }
-      .lede, .pull-quote { font-size: 22px; }
-      .info-row { flex-direction: column; gap: 12px; }
-      .info-row__label { width: 100%; }
-      .at-a-glance { grid-template-columns: 1fr 1fr; }
-      .at-a-glance__cell { border-right: 1px solid var(--divider); border-bottom: 1px solid var(--divider); }
-      .at-a-glance__cell:nth-child(even) { border-right: none; }
-      .at-a-glance__cell:nth-last-child(-n+2) { border-bottom: none; }
-      .prose { max-width: 100%; }
-      .two-col { flex-direction: column; }
-      .research-row { flex-direction: column; }
-      .research-row__image { width: 100%; height: auto; }
-      .exploration-body { flex-direction: column; }
-      .exploration-body img.explore-screens { width: 100%; height: auto; }
-      .metrics { flex-direction: column; }
-      .next-callout { flex-direction: column; align-items: flex-start; }
-      .goals__row { flex-direction: column; }
+      .insights { flex-direction: column; }
+      .insights .learning { flex: none; }
+      .insights .learning .li-narrow { max-width: none; }
+    }
+
+    @media (max-width: 768px) {
+      .hero-pair { gap: var(--space-04); padding: var(--space-05) var(--space-04); }
+      .hero-pair img { flex: 0 1 auto; min-width: 0; }
+      .hero-pair img:first-child { width: 58.9%; height: auto; aspect-ratio: 232 / 475; }
+      .hero-pair img:last-child { width: 41.1%; height: auto; aspect-ratio: 162 / 383; }
+
+      .research-card--survey { width: 300px; }
+      .research-card--survey > img { width: 100%; height: auto; aspect-ratio: 399 / 380; }
+
+      .iterations__examples { flex-wrap: wrap; gap: var(--space-05); }
+      .iterations__examples figure { flex: 1 1 140px; }
+      .iterations__examples img { width: 100%; }
+
+      .next-step__example { align-self: stretch; padding: var(--space-05); text-align: center; }
+      .next-step__example img { width: 100%; max-width: 322px; height: auto; aspect-ratio: 322 / 526; }
+
+      .nowrap { white-space: normal; }
     }
   </style>
 </head>
 <body>
-  <!-- HEADER -->
-  <header class="site-header">
-    <div class="site-header__left">
-      <a class="btn btn--secondary btn--back" href="index.html">
-        <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
-          <path d="M7.5 5l5 5-5 5" stroke="#302a3f" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
-        </svg>
-        Back
-      </a>
-      <a class="site-header__logo" href="index.html">Andrew Gaskell</a>
-    </div>
+  <a class="skip-link" href="#main">Skip to content</a>
 
-    <div class="site-header__links">
-      <a class="header-link" href="mailto:andygaskell10@outlook.com">
-        <svg width="20" height="18" viewBox="0 0 20 18" fill="none" aria-hidden="true">
-          <rect x="1" y="2" width="18" height="14" rx="2" stroke="#302a3f" stroke-width="1.5" />
-          <path d="M2 3.5l8 6.5 8-6.5" stroke="#302a3f" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round" />
-        </svg>
-        <span>andygaskell10@outlook.com</span>
-      </a>
+  <header class="site-header site-header--case">
+    <a class="btn-secondary" href="index.html">
+      <span class="btn-secondary__icon"><img src="images/cs-icon-arrow-back.svg" width="11.2908" height="13.7502" alt="" /></span>
+      Back
+    </a>
 
-      <span class="header-link">
-        <svg width="20" height="20" viewBox="0 0 20 20" fill="#302a3f" aria-hidden="true">
-          <path d="M4.98 3.5A2.49 2.49 0 002.5 6a2.5 2.5 0 105 0 2.49 2.49 0 00-2.52-2.5zM3 8.5h4v10H3v-10zM9 8.5h3.8v1.37h.05c.53-1 1.83-2.07 3.77-2.07 4.03 0 4.78 2.65 4.78 6.1v5.1h-4v-4.52c0-1.08-.02-2.47-1.5-2.47-1.5 0-1.73 1.17-1.73 2.39v4.6h-4V8.5z"/>
-        </svg>
+    <ul class="site-contact" aria-label="Contact">
+      <li>
+        <a class="header-link" href="mailto:andygaskell10@outlook.com">
+          <img class="header-link__icon" src="images/home-icon-mail.svg" width="20" height="20" alt="" />
+          <span>andygaskell10@outlook.com</span>
+        </a>
+      </li>
+      <li>
         <a
-          href="https://www.linkedin.com/in/andrew-gaskell-4092a5191?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app"
+          class="header-link header-link--underline"
+          href="https://www.linkedin.com/in/andrew-gaskell-4092a5191/"
           target="_blank"
           rel="noopener"
-        >Click here for my profile</a>
-      </span>
-    </div>
+          aria-label="My LinkedIn Profile (opens in a new tab)"
+        >
+          <img class="header-link__icon" src="images/home-icon-linkedin.svg" width="20" height="20" alt="" />
+          <span>My LinkedIn Profile</span>
+        </a>
+      </li>
+    </ul>
   </header>
 
-  <main class="body-wrap">
-    <!-- HERO -->
-    <section class="hero">
-      <div class="hero__media">
-        <img
-          class="img-back"
-          src="images/multiples-hero-back.png"
-          alt="Multiples – secondary screen"
-        />
-        <img
-          class="img-front"
-          src="images/multiples-hero-front.png"
-          alt="Multiples – primary screen"
-        />
-      </div>
-      <h1 class="hero__title">Multiples</h1>
-    </section>
+  <div class="cs">
+    <nav class="side-nav" aria-label="Case study sections" data-scrollspy>
+      <ul>
+        <li><a href="#overview">Overview</a></li>
+        <li><a href="#problem">The Problem</a></li>
+        <li><a href="#research">Research</a></li>
+        <li><a href="#process">My Design Process</a></li>
+        <li><a href="#validation">Validation</a></li>
+        <li><a href="#iterations">Iterations</a></li>
+        <li><a href="#journey">User Journey</a></li>
+        <li><a href="#results">Results &amp; Impact</a></li>
+        <li><a href="#reflections">Reflections &amp; Learnings</a></li>
+        <li><a href="#next-steps">Next Steps</a></li>
+      </ul>
+    </nav>
 
-    <!-- INTRO LEDE -->
-    <section>
-      <p class="lede prose">
-        Solving the need of allowing customers to combine multiple win bets
-        into a single bet has generated over <strong>£4M turnover</strong> and
-        55% of customers saying they will bet on multiples 'regularly'.
-      </p>
-    </section>
-
-    <!-- INFO TABLE -->
-    <section>
-      <dl class="info-table">
-        <div class="info-row">
-          <div class="info-row__label">ROLE</div>
-          <div class="info-row__value">Lead Designer</div>
+    <main id="main" class="cs-main">
+      <!-- OVERVIEW -->
+      <section id="overview" class="section" aria-labelledby="cs-title" data-reveal>
+        <div class="overview__header">
+          <h1 id="cs-title" class="overview__title">Multiples</h1>
+          <p class="t-18 muted">Building a bet type that no other pool operator in the world has built before.</p>
         </div>
-        <div class="info-row">
-          <div class="info-row__label">RESPONSIBILITIES</div>
-          <div class="info-row__value">
-            <ul>
-              <li>Identified the problem through surveys and benchmarking current KPIs.</li>
-              <li>Conducted 10 user interviews with existing customers.</li>
-              <li>Redesigned the betslip experience.</li>
-              <li>Collaborated closely with PM and engineer to navigate technical limitations and delivery plans.</li>
-              <li>Engaged with developers to improve the design handover experience, increasing the accuracy of the build compared to designs.</li>
-            </ul>
+        <p class="t-14 w-660">Research identified that customers were betting with our competitors because they offered multiples as a bet type, where a customer can combine several single bets into one bet. After identifying this as a key pain point for customers, I redesigned the betslip to be able to facilitate multiples, which I validated through customer interviews. Multiples generates £4.5M in annual revenue, and a follow-up survey found that 55% of customers bet on multiples regularly.</p>
+
+        <div class="metric-row metric-row--ruled">
+          <div class="metric metric--fixed">
+            <p class="metric__value">£4.5M Annually</p>
+            <p class="metric__label">Multiples Revenue</p>
+          </div>
+          <div class="metric">
+            <p class="metric__value">55%</p>
+            <p class="metric__label">Of customers bet on multiples regularly</p>
+          </div>
+          <div class="metric">
+            <p class="metric__value">World First</p>
+            <p class="metric__label">No other pool operator offers multiples</p>
           </div>
         </div>
-        <div class="info-row">
-          <div class="info-row__label">COLLABORATORS</div>
-          <div class="info-row__value">
-            UX Design, Product, Engineering, SLT, ExCo, BI, Product Analyst, Business Planning, Head of Racing.
+
+        <div class="hero-pair panel">
+          <img src="images/mx-hero-lg.png" width="232" height="475" alt="Tote app racecard for Cheltenham with a Double quickbet open at the bottom of the screen" />
+          <img src="images/mx-hero-sm.png" width="162" height="383" alt="Tote app betslip showing a Treble across three horses, with more multiples such as a Patent and Trixie below" />
+        </div>
+      </section>
+
+      <!-- THE PROBLEM -->
+      <section id="problem" class="section" aria-labelledby="problem-title" data-reveal>
+        <h2 id="problem-title" class="h-section">The Problem</h2>
+        <ol class="problem-list t-18">
+          <li style="max-width: 746px;">Customers expect the same experience with the Tote as they get with our competitors. As they could bet on multiples elsewhere, the Tote was struggling to retain customers.</li>
+          <li>It was previously believed internally that pools betting could not be used for multiples.</li>
+          <li>The business wanted to increase the average spend of our racing customers.</li>
+        </ol>
+      </section>
+
+      <!-- RESEARCH -->
+      <section id="research" class="section" aria-labelledby="research-title" data-reveal>
+        <div class="carousel-head carousel-head--center">
+          <h2 id="research-title" class="h-section">Research</h2>
+          <div class="carousel-controls">
+            <button class="icon-btn icon-btn--prev" type="button" data-carousel-prev aria-controls="research-track" aria-label="Previous" disabled>
+              <img class="is-on" src="images/cs-icon-chevron-right.svg" alt="" />
+              <img class="is-off" src="images/cs-icon-chevron-left-disabled.svg" alt="" />
+            </button>
+            <button class="icon-btn icon-btn--next" type="button" data-carousel-next aria-controls="research-track" aria-label="Next">
+              <img class="is-on" src="images/cs-icon-chevron-right.svg" alt="" />
+              <img class="is-off" src="images/cs-icon-chevron-left-disabled.svg" alt="" />
+            </button>
           </div>
         </div>
-        <div class="info-row">
-          <div class="info-row__label">TIMELINE</div>
-          <div class="info-row__value">Key Strategic item for FY 2024 (Sept–Sept).</div>
-        </div>
-      </dl>
-    </section>
 
-    <!-- 01 — CONTEXT: THE PROBLEM -->
-    <section class="section-block">
-      <div class="section-head">
-        <div class="section-eyebrow">
-          <span class="section-eyebrow__num">01</span>
-          <span class="section-eyebrow__rule"></span>
-          <span>Context</span>
-        </div>
-        <h2 class="section-title">The Problem</h2>
-      </div>
-      <p class="pull-quote prose">
-        "I like betting on doubles and trebles, but i can't find that function on the tote"
-      </p>
-      <div class="two-col">
-        <p>
-          In quarterly surveys, one of the biggest obstacles that customers
-          stated to betting with the tote was that we didn't offer multiples
-          (trebles, 4folds, etc.).
-        </p>
-        <p>
-          This is because pools betting does not show the combined price so
-          customers can't see their returns increasing – a significant factor
-          to their popularity. <strong>This project would be a world first in pools betting.</strong>
-        </p>
-      </div>
-      <div class="callout">
-        Customers expect to be able to place multiples as they are popular and
-        common in the industry, unfulfilling this need increases the likelihood
-        that customers go elsewhere.
-      </div>
-    </section>
-
-    <!-- 02 — NORTH STAR: GOALS & SUCCESS METRICS -->
-    <section class="section-block">
-      <div class="section-head">
-        <div class="section-eyebrow">
-          <span class="section-eyebrow__num">02</span>
-          <span class="section-eyebrow__rule"></span>
-          <span>North Star</span>
-        </div>
-        <h2 class="section-title">Goals &amp; Success Metrics</h2>
-      </div>
-      <div class="goals prose">
-        <div class="goals__row">
-          <div class="goals__label">Design Goal:</div>
-          <div class="goals__value">(1) Create a betslip experience that combines the customer's selections into one bet, (2) Reduce the existing betslip cognitive load, and (3) create a scalable betslip where a customer can quickly place their desired bet.</div>
-        </div>
-        <div class="goals__row">
-          <div class="goals__label">Business Goal:</div>
-          <div class="goals__value">Increase the number of bets per customer.</div>
-        </div>
-        <div class="goals__row">
-          <div class="goals__label">Success Metrics:</div>
-          <div class="goals__value">Retention Rates, Bets per Active, Stake per Active, Win Bet Conversion.</div>
-        </div>
-      </div>
-    </section>
-
-    <!-- RESEARCH & DISCOVERY + INSIGHTS -->
-    <section class="section-block section-block--lg">
-      <div class="section-block">
-        <div class="section-head">
-          <div class="section-eyebrow">
-            <span class="section-eyebrow__num">03</span>
-            <span class="section-eyebrow__rule"></span>
-            <span>Discovery</span>
+        <div id="research-track" class="carousel" data-carousel tabindex="0" role="region" aria-label="Research">
+          <div class="research-card research-card--survey panel">
+            <h3 class="t-14 bold strong">Customer Surveys</h3>
+            <img src="images/mx-survey-feedback.png" width="399" height="380" loading="lazy" alt="Wall of survey comments asking for multiples, such as “Allow multiple bets”, “I place doubles and trebles elsewhere” and “Can’t do a patent or yankee”" />
+            <div class="stack-8 t-14">
+              <h4 class="bold muted">Insight</h4>
+              <p class="text-600">Quarterly surveys identified that not having multiples meant customers were going elsewhere to place those bets.</p>
+            </div>
           </div>
-          <h2 class="section-title">Research &amp; Discovery</h2>
+
+          <div class="research-card panel">
+            <h3 class="t-14 bold strong">Competitor Analysis</h3>
+            <div class="shots">
+              <img src="images/mx-competitor-1.png" width="175" height="380" loading="lazy" alt="Competitor betslip with three Chepstow selections, offering a Treble, Singles and Doubles below them" />
+              <img src="images/mx-competitor-2.png" width="175" height="380" loading="lazy" alt="Competitor betslip with a Multiples tab selected, showing three selections combined into a Treble" />
+              <img src="images/mx-competitor-3.png" width="175" height="380" loading="lazy" alt="Competitor racecard with a Treble quickbet pinned to the bottom of the screen" />
+              <img src="images/mx-competitor-4.png" width="175" height="380" loading="lazy" alt="Competitor racecard with a Treble bet slip pinned to the bottom of the screen" />
+            </div>
+            <div class="stack-8 t-14">
+              <h4 class="bold muted">Insight</h4>
+              <p class="text-600">Competitor analysis showed that there was an emphasis on the importance of multiples as they were often above the fold on horse racing homepages. Furthermore, the betslip would show a multiple bet rather than a collection of singles.</p>
+            </div>
+          </div>
         </div>
-        <div class="research-row">
-          <img
-            class="research-row__image"
-            src="images/multiples-discovery.png"
-            alt="Research synthesis affinity map"
-          />
-          <ol class="research-row__notes">
-            <li>Quarterly surveys identified how not having multiples meant customers were going elsewhere to place those bets.</li>
-            <li>Competitor analysis showed that there was an emphasis on the importance of multiples as they were often above the fold on the horse racing homepages. Furthermore, the betslip would show a multiple bet rather than a collection of singles.</li>
-            <li>User journey maps and personas were created to communicate to stakeholders the significance of the pain point and it's impact on revenue and retention.</li>
-            <li>I conducted interviews with 10 participants that included a task with the current experience. I created a 'Tote Bet Club', a verified group of engaged and verified customers that are open to taking part in interviews.</li>
+
+        <div class="stack-12">
+          <h3 class="h-sub h-sub--primary">Hypothesis</h3>
+          <p class="t-18 secondary">By giving customers the ability to combine several single bets into a multiple bet, the average spend per customer will increase, as they will be retained for a longer period.</p>
+        </div>
+      </section>
+
+      <!-- MY DESIGN PROCESS -->
+      <section id="process" class="section" aria-labelledby="process-title" data-reveal>
+        <div class="carousel-head carousel-head--center">
+          <h2 id="process-title" class="h-section">My Design Process</h2>
+          <div class="carousel-controls">
+            <button class="icon-btn icon-btn--prev" type="button" data-carousel-prev aria-controls="process-track" aria-label="Previous" disabled>
+              <img class="is-on" src="images/cs-icon-chevron-right.svg" alt="" />
+              <img class="is-off" src="images/cs-icon-chevron-left-disabled.svg" alt="" />
+            </button>
+            <button class="icon-btn icon-btn--next" type="button" data-carousel-next aria-controls="process-track" aria-label="Next">
+              <img class="is-on" src="images/cs-icon-chevron-right.svg" alt="" />
+              <img class="is-off" src="images/cs-icon-chevron-left-disabled.svg" alt="" />
+            </button>
+          </div>
+        </div>
+
+        <div id="process-track" class="carousel" data-carousel tabindex="0" role="region" aria-label="Design process steps">
+          <ol class="flow flow--captioned panel" style="list-style: none;">
+            <li class="flow__step">
+              <img src="images/mx-process-original.png" width="203" height="439" loading="lazy" alt="Original betslip with a separate card and stake fields for each selection" />
+              <p class="chip chip--label">Original Betslip</p>
+              <ul class="flow__caption caption t-13">
+                <li class="flow__point"><img src="images/mx-icon-thumbs-down.svg" alt="Negative:" />Overuse of colour.</li>
+                <li class="flow__point"><img src="images/mx-icon-thumbs-down.svg" alt="Negative:" />Two exits for every bet.</li>
+                <li class="flow__point"><img src="images/mx-icon-thumbs-down.svg" alt="Negative:" />Customers had to stake on each selection individually rather than on a multiple.</li>
+              </ul>
+            </li>
+            <li class="flow__arrow" aria-hidden="true"><img src="images/mx-icon-step-arrow.svg" width="103.387" height="7.36396" alt="" /></li>
+            <li class="flow__step">
+              <img src="images/mx-process-reusing.png" width="203" height="439" loading="lazy" alt="Betslip built from existing placepot components, showing a 4 Fold" />
+              <p class="chip chip--label">Reusing Components</p>
+              <ul class="flow__caption caption t-13">
+                <li class="flow__point"><img src="images/mx-icon-thumbs-up.svg" alt="Positive:" />Reusing existing placepot components.</li>
+                <li class="flow__point"><img src="images/mx-icon-thumbs-down.svg" alt="Negative:" />Difficult to scale the betslip as there is no compartmentalisation.</li>
+              </ul>
+            </li>
+            <li class="flow__arrow" aria-hidden="true"><img src="images/mx-icon-step-arrow.svg" width="103.387" height="7.36396" alt="" /></li>
+            <li class="flow__step">
+              <img src="images/mx-process-chronological.png" width="203" height="438" loading="lazy" alt="Betslip listing selections in race order with the Treble at the bottom" />
+              <p class="chip chip--label">Chronological Order</p>
+              <ul class="flow__caption caption t-13">
+                <li class="flow__point"><img src="images/mx-icon-thumbs-up.svg" alt="Positive:" />Primary button stands out after scaling back colour.</li>
+                <li class="flow__point"><img src="images/mx-icon-thumbs-down.svg" alt="Negative:" />Stakeholders fed back it wasn’t clear which horses were in the treble.</li>
+              </ul>
+            </li>
+            <li class="flow__arrow" aria-hidden="true"><img src="images/mx-icon-step-arrow.svg" width="103.387" height="7.36396" alt="" /></li>
+            <li class="flow__step">
+              <img src="images/mx-process-final.png" width="203" height="438" loading="lazy" alt="Final betslip with the Treble card at the top, grouping its three horses, and a returns field" />
+              <p class="chip chip--label">Final Design</p>
+              <ul class="flow__caption caption t-13">
+                <li class="flow__point"><img src="images/mx-icon-thumbs-up.svg" alt="Positive:" />Multiple at the top of the visual hierarchy.</li>
+                <li class="flow__point"><img src="images/mx-icon-thumbs-up.svg" alt="Positive:" />Added returns to show the value of the bets.</li>
+              </ul>
+            </li>
           </ol>
         </div>
-      </div>
+      </section>
 
-      <div class="section-block">
-        <h3 class="section-subtitle">Insights</h3>
-        <div class="insight-card">
-          <p class="insight-card__title">Desire For Larger Returns</p>
-          <p class="insight-card__quote">"If you can combine some of the outsiders on the Tote, your returns could be massive for a small stake".</p>
-          <p class="insight-card__body">One of the main goals for customers placing multiples is so they can combine several of there selections and increase their total returns, as the combination pays out more than if the bets were placed separately.</p>
-        </div>
-        <div class="insight-card">
-          <p class="insight-card__title">Customers Need To See The Returns For Their Bet</p>
-          <p class="insight-card__quote">"If you want me to bet with you instead of 365, you have to show potential returns, i'm all about value"</p>
-          <p class="insight-card__body">One of the main motivators for customers playing the Tote if the prospect of winning a lot from a small stake.</p>
-        </div>
-        <div class="insight-card">
-          <p class="insight-card__title">Simplifying The Betslip</p>
-          <p class="insight-card__quote">"There's too much going on in the betslip, it's confusing".</p>
-          <p class="insight-card__body">Adding multiple selections to a betslip can meet the criteria for different bet types, a customer will decide which bet type they want to place at this point, so it is important that it is clear which stake box refers to which bet type.</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- 04 — DESIGN: EXPLORATION -->
-    <section class="section-block">
-      <div class="section-head">
-        <div class="section-eyebrow">
-          <span class="section-eyebrow__num">04</span>
-          <span class="section-eyebrow__rule"></span>
-          <span>Design</span>
-        </div>
-        <h2 class="section-title">Exploration</h2>
-      </div>
-      <div class="exploration-body">
-        <img
-          class="explore-screens"
-          src="images/multiples-user-journey.png"
-          alt="Betslip exploration screens with annotations"
-        />
-        <div class="exploration-body__notes">
-          <p>Existing components had several issues, such as lack of common region for the selections, too many exit points, and license of the typography expiring.</p>
-          <p>I moved towards displaying each bet in a card format to compartmentalise the relevant information.</p>
-          <p>Competitor research helped inform the decision for the order of the betslip, with the multiple being top.</p>
-          <p>Research showed that telling customers the return for their bet is the biggest motivator for placing multiples, however the Totes return value can change dependent on the market. Therefore we used the term 'Potential returns' and tested it with customers.</p>
-          <p class="exploration-body__feedback">Feedback included:
-
-"Potential lets you know it's not guaranteed"</p>
-        </div>
-      </div>
-
-      <video
-        class="user-testing-video"
-        controls
-        preload="metadata"
-        playsinline
-        aria-label="Multiples user testing clip"
-      >
-        <source src="media/multiples-interview.mp4" type="video/mp4" />
-        Your browser does not support the video tag.
-      </video>
-    </section>
-
-    <!-- 05 — SOLUTION: USER JOURNEY -->
-    <section class="section-block">
-      <div class="section-head">
-        <div class="section-eyebrow">
-          <span class="section-eyebrow__num">05</span>
-          <span class="section-eyebrow__rule"></span>
-          <span>Solution</span>
-        </div>
-        <h2 class="section-title">User Journey</h2>
-      </div>
-      <img
-        class="user-journey__image"
-        src="images/multiples-iterations.png"
-        alt="Multiples user journey flow"
-      />
-      <p class="user-journey__lead prose">Key design decisions</p>
-      <ol class="decisions prose">
-        <li class="decisions__item">
-          <strong>Potential Returns</strong> – There was hesitation with
-          stakeholders about displaying a returns value as customers may be
-          frustrated when their returns are less than the value shown at bet
-          placement. The research I presented convinced them that customers
-          needed to see that value as a motivator for placing that bet. The
-          term 'potential' was tested and customers gave the feedback that
-          they knew that return value was not guaranteed.
-        </li>
-        <li class="decisions__item">
-          <strong>Card Layout</strong> – The redesign had to consider a scaling
-          betslip, as the changes would be universal. Using cards made it
-          easier for customers to see which information was related to each
-          other, so there would be limited confusion when several bets are
-          displayed in their betslip. This is because the relevant information
-          for each bet would have a shared common region.
-        </li>
-        <li class="decisions__item">
-          <strong>Font</strong> – The license for the previous font had
-          expired, so I chose a google font based on the low cost and
-          accessibility on digital platforms. I liaised with the marketing and
-          branding departments to ensure we were all aligned on this decision.
-        </li>
-      </ol>
-    </section>
-
-    <!-- 06 — IMPACT: RESULTS -->
-    <section class="section-block">
-      <div class="section-head">
-        <div class="section-eyebrow">
-          <span class="section-eyebrow__num">06</span>
-          <span class="section-eyebrow__rule"></span>
-          <span>Impact</span>
-        </div>
-        <h2 class="section-title">Results &amp; Impact</h2>
-      </div>
-      <p class="prose" style="font-size:16px; color: var(--text); letter-spacing:-0.08px; line-height:1.5;">
-        The UK tote is the only place in the world where you can combine
-        several win bets into a single 'multiple', including tote products on
-        bookmakers and international totes such as TAB (Australia) and PMU
-        (France). The redesign of the betslip solved the cognitive overload
-        from the previous layout, whilst introducing a potential returns value
-        which is in itself an innovation in pools betting.
-      </p>
-      <div class="metrics">
-        <div class="metric">
-          <p class="metric__number">£4M</p>
-          <p class="metric__label">Yearly Turnover</p>
-          <p class="metric__sublabel">Meeting budget expectations</p>
-        </div>
-        <div class="metric">
-          <p class="metric__number">55%</p>
-          <p class="metric__label">'Likely' to bet regularly</p>
-          <p class="metric__sublabel">Quarterly survey findings</p>
-        </div>
-        <div class="metric">
-          <p class="metric__number">World First</p>
-          <p class="metric__label">Pools betting innovation</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- 07 — LEARNINGS: REFLECTIONS -->
-    <section class="section-block">
-      <div class="section-head">
-        <div class="section-eyebrow">
-          <span class="section-eyebrow__num">07</span>
-          <span class="section-eyebrow__rule"></span>
-          <span>Learnings</span>
-        </div>
-        <h2 class="section-title">Reflections and Learnings</h2>
-      </div>
-
-      <div class="insight-card reflection-card">
-        <p class="insight-card__title">Agile Delivery</p>
-        <p class="insight-card__body">
-          The backend services were having to be rewritten, but it was
-          important to get a product live and begin measuring data and creating
-          revenue.
-        </p>
-        <p class="reflection-card__label">What I did:</p>
-        <ul>
-          <li>Broke up the designs into three separate pages, so developers could see clearly which design was related to which version.</li>
-          <li>Used the UX research to inform what function should be MVP, also suggested that 'named bets' should be included in next released based off customer feedback.</li>
-        </ul>
-        <p class="reflection-card__label">What I learned:</p>
-        <ul>
-          <li>Building a strong relationship with the product manager and engineers meant we were all aligned when requirements changed due to backend resource. The designs were able to adapt quickly when the situations changed.</li>
-        </ul>
-      </div>
-
-      <div class="insight-card reflection-card">
-        <p class="insight-card__title">Design Consistency</p>
-        <p class="insight-card__body">
-          The existing Design System was fragmented and inconsistent across
-          different platform. Rebuilding the components from scratch created
-          the opportunity to build a library that other designers could use and
-          decrease design time whilst improving consistency.
-        </p>
-        <p class="reflection-card__label">What I did:</p>
-        <ul>
-          <li>Consolidated the design system into one file.</li>
-          <li>Learnt from industry standard design systems with how to layout the file as well as reducing the amount of variations.</li>
-        </ul>
-        <p class="reflection-card__label">What I learned:</p>
-        <ul>
-          <li>Developers did not naturally adopt the design system, I hosted several sessions walking them through the files and saying that this is where the source of truth for each component and their variations will be housed.</li>
-        </ul>
-      </div>
-    </section>
-
-    <!-- 08 — WHAT'S NEXT -->
-    <section class="section-block section-block--lg">
-      <div class="section-head">
-        <div class="section-eyebrow">
-          <span class="section-eyebrow__num">08</span>
-          <span class="section-eyebrow__rule"></span>
-          <span>What's Next</span>
-        </div>
-        <h2 class="section-title">Next Steps</h2>
-      </div>
-
-      <div class="section-block">
-        <p class="pull-quote prose">"I would like to bet on multiples across different meetings"</p>
-        <div class="two-col">
-          <p>In the first implementation, betting across different meetings functionality was not enabled as a limitation of how the backend systems were set up.</p>
-          <p>This feedback has been included in the problem statements that may be solved through the 'Lock In Your Price' initiative.</p>
-        </div>
-      </div>
-
-      <div class="section-block">
-        <div class="two-col">
-          <p>The 'Floating Action Button', that is the CTA for customers to access their betslip was initially chosen as it was a library component in Material Design, so there was less development needed.</p>
-          <p>The limitation of this component is that customers cannot (a) see their returns increase as they add more selections, and (b) adds an extra click to placing the bet as there is no quickbet functionality.</p>
+      <!-- VALIDATION -->
+      <section id="validation" class="section" aria-labelledby="validation-title" data-reveal>
+        <div class="stack-12">
+          <h2 id="validation-title" class="h-section">Validation</h2>
+          <p class="t-14 muted w-636">Eight customer interviews were conducted with Tote customers. They were shown a beta build and tasked with betting on a multiple of their choosing.</p>
         </div>
 
-        <div class="next-callout" style="margin-top: 24px;">
-          <div class="quickbet" aria-hidden="true">
-            <div class="quickbet__panel">
-              <div class="quickbet__top">
-                <div class="quickbet__selection">
-                  <div class="quickbet__header">
-                    <span class="quickbet__label">Treble</span>
-                    <span class="quickbet__price">4.50</span>
-                  </div>
-                  <div class="quickbet__runners">(3) Luminous Warrior, Banyan, Justan</div>
-                </div>
-                <div class="quickbet__arrows">
-                  <svg width="8" height="8" viewBox="0 0 8 8" fill="none">
-                    <path d="M2 3l2-2 2 2M2 5l2 2 2-2" stroke="#221414" stroke-width="0.8" stroke-linecap="round" stroke-linejoin="round" />
-                  </svg>
-                </div>
-              </div>
-              <div class="quickbet__row">
-                <div class="quickbet__stake">
-                  <span class="currency">£</span>
-                  <span class="placeholder">Stake</span>
-                </div>
-                <div class="quickbet__btn">Place bet</div>
-              </div>
-            </div>
-            <div class="quickbet__home-indicator"></div>
+        <img class="interview" src="images/mx-interview.webp" width="916" height="492" loading="lazy" alt="Screen recording from a customer interview: the participant, on camera in the corner, uses the Tote racecards page with two selections in the betslip" />
+
+        <div class="decisions">
+          <h3 class="h-sub">Interview Insights</h3>
+          <ul class="learnings insights panel" aria-label="Interview insights">
+            <li class="learning">
+              <h4 class="learning__title learning__title--positive t-14"><img src="images/mx-icon-thumbs-up.svg" alt="" />Potential Returns</h4>
+              <ul class="t-14 secondary">
+                <li class="li-narrow">Telling customers the return for their bet is the biggest motivator for placing multiples.</li>
+                <li>The Tote’s return value can change depending on the market. Therefore, we used the term ‘Potential returns’ and tested it with customers.</li>
+              </ul>
+            </li>
+            <li class="learning">
+              <h4 class="learning__title learning__title--negative t-14"><img src="images/mx-icon-thumbs-down.svg" alt="" />Cross-Meeting</h4>
+              <ul class="t-14 secondary">
+                <li>Customers would add favourites for the next races regardless of which meeting the selections were from.</li>
+                <li>The Tote does not have the functionality to support this.</li>
+              </ul>
+            </li>
+            <li class="learning">
+              <h4 class="learning__title learning__title--negative t-14"><img src="images/mx-icon-alert.svg" alt="" />Error Messaging</h4>
+              <ul class="t-14">
+                <li>The error messaging used in the interviews wasn’t clear to customers, who were confused when we could not combine their selections.</li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ITERATIONS -->
+      <section id="iterations" class="section" aria-labelledby="iterations-title" data-reveal>
+        <div class="iterations">
+          <div class="iterations__body stack-12">
+            <h2 id="iterations-title" class="h-section">Iterations</h2>
+            <p class="t-14 muted">Customer interviews showed that the current error messaging was not clear to customers. I changed the colour so it stood out more, and also changed the language, as ‘same card’ is not universally understood.</p>
           </div>
-          <p class="next-callout__text">
-            Adding a quickbet into the journey rather than the FAB may increase
-            conversion as there is less clicks to placing a multiples, as well
-            as seeing the combined odds as a customer adds more selections to
-            the betslip.
-          </p>
+          <div class="iterations__examples">
+            <figure>
+              <img src="images/mx-iteration-before.png" width="272" height="162" loading="lazy" alt="Original betslip error in a pale yellow box: “Selections must all be placed on the same card”" />
+              <figcaption class="chip chip--label">Before</figcaption>
+            </figure>
+            <figure>
+              <img src="images/mx-iteration-after.png" width="272" height="162" loading="lazy" alt="Revised betslip error in a red box with a warning icon, saying selections from different meetings cannot be combined into a multiple" />
+              <figcaption class="chip chip--label">After</figcaption>
+            </figure>
+          </div>
         </div>
-      </div>
-    </section>
-  </main>
+      </section>
 
-  <script>
-    (function () {
-      var header = document.querySelector('.site-header');
-      if (!header) return;
-      var toggle = function () {
-        if (window.scrollY > 8) {
-          header.classList.add('site-header--scrolled');
-        } else {
-          header.classList.remove('site-header--scrolled');
-        }
-      };
-      toggle();
-      window.addEventListener('scroll', toggle, { passive: true });
-    })();
-  </script>
+      <!-- USER JOURNEY -->
+      <section id="journey" class="section" aria-labelledby="journey-title" data-reveal>
+        <div class="carousel-head carousel-head--center">
+          <h2 id="journey-title" class="h-section">User Journey</h2>
+          <div class="carousel-controls">
+            <button class="icon-btn icon-btn--prev" type="button" data-carousel-prev aria-controls="journey-track" aria-label="Previous" disabled>
+              <img class="is-on" src="images/cs-icon-chevron-right.svg" alt="" />
+              <img class="is-off" src="images/cs-icon-chevron-left-disabled.svg" alt="" />
+            </button>
+            <button class="icon-btn icon-btn--next" type="button" data-carousel-next aria-controls="journey-track" aria-label="Next">
+              <img class="is-on" src="images/cs-icon-chevron-right.svg" alt="" />
+              <img class="is-off" src="images/cs-icon-chevron-left-disabled.svg" alt="" />
+            </button>
+          </div>
+        </div>
+
+        <div id="journey-track" class="carousel" data-carousel tabindex="0" role="region" aria-label="User journey screens">
+          <ol class="flow panel" style="list-style: none;">
+            <li class="flow__step">
+              <img src="images/mx-journey-single-quickbet.png" width="203" height="438" loading="lazy" alt="Cheltenham racecard with one selection, Jagwar, in the quickbet" />
+              <p class="chip chip--label">Single Quickbet</p>
+            </li>
+            <li class="flow__arrow" aria-hidden="true"><img src="images/mx-icon-step-arrow.svg" width="103.387" height="7.36396" alt="" /></li>
+            <li class="flow__step">
+              <img src="images/mx-journey-multiple-quickbet.png" width="203" height="438" loading="lazy" alt="Cheltenham racecard with the quickbet updated to a Double with two selections" />
+              <p class="chip chip--label">Multiple Quickbet</p>
+            </li>
+            <li class="flow__arrow" aria-hidden="true"><img src="images/mx-icon-step-arrow.svg" width="103.387" height="7.36396" alt="" /></li>
+            <li class="flow__step">
+              <img src="images/mx-journey-full-betslip.png" width="203" height="438" loading="lazy" alt="Full betslip with a Treble card at the top and more multiples, such as a Patent, below" />
+              <p class="chip chip--label">Multiple Full Betslip</p>
+            </li>
+            <li class="flow__arrow" aria-hidden="true"><img src="images/mx-icon-step-arrow.svg" width="103.387" height="7.36396" alt="" /></li>
+            <li class="flow__step">
+              <img src="images/mx-journey-bet-receipt.png" width="203" height="438" loading="lazy" alt="Bet receipt saying “Your Bet Is On!” for a £5.00 Double with £22.50 returns" />
+              <p class="chip chip--label">Bet Receipt</p>
+            </li>
+          </ol>
+        </div>
+
+        <div class="decisions">
+          <h3 class="h-sub">Key Design Decisions</h3>
+          <div class="reflection">
+            <div class="reflection__title stack-12">
+              <h4 class="t-18 nowrap">Potential Returns</h4>
+              <p class="t-14 muted">Showing the value a customer may win when they input a stake.</p>
+            </div>
+            <blockquote class="reflection__quote panel">
+              <span class="reflection__mark" aria-hidden="true">“</span>
+              <p class="t-14 text-600">There was hesitation among stakeholders about displaying a returns value as customers may be frustrated when their returns are less than the value shown at bet placement. The research I presented convinced them that customers needed to see that value as a motivator for placing that bet. The term ‘potential’ was tested and customers’ feedback showed they understood the return value was not guaranteed.</p>
+              <span class="reflection__mark" aria-hidden="true">“</span>
+            </blockquote>
+          </div>
+          <div class="reflection">
+            <div class="reflection__title stack-12">
+              <h4 class="t-18 nowrap">Card Layout</h4>
+              <p class="t-14 muted">Wireframing and research showed that a redesign of the betslip was necessary.</p>
+            </div>
+            <blockquote class="reflection__quote panel">
+              <span class="reflection__mark" aria-hidden="true">“</span>
+              <p class="t-14 text-600">The redesign had to consider a scaling betslip, as the changes would be universal. Using cards made it easier for customers to see which information was related to each other, so there would be limited confusion when several bets are displayed in their betslip.</p>
+              <span class="reflection__mark" aria-hidden="true">“</span>
+            </blockquote>
+          </div>
+          <div class="reflection">
+            <div class="reflection__title stack-12">
+              <h4 class="t-18 nowrap">Typeface</h4>
+              <p class="t-14 muted">The licence of the existing typeface was about to expire. Rather than repaying for a bespoke package, I suggested using a free Google typeface.</p>
+            </div>
+            <blockquote class="reflection__quote panel">
+              <span class="reflection__mark" aria-hidden="true">“</span>
+              <p class="t-14 text-600">I chose a Google typeface because of its low cost and accessibility on digital platforms. I liaised with the marketing and branding departments to ensure we were all aligned on this decision.</p>
+              <span class="reflection__mark" aria-hidden="true">“</span>
+            </blockquote>
+          </div>
+        </div>
+      </section>
+
+      <!-- RESULTS & IMPACT -->
+      <section id="results" class="section" aria-labelledby="results-title" data-reveal>
+        <div class="stack-12">
+          <h2 id="results-title" class="h-section">Results &amp; Impact</h2>
+          <p class="t-14 muted w-636">The UK Tote is the only pool operator in the world where you can combine several win bets into a single multiple. No other tote offers this, including tote products on bookmakers’ sites and international totes such as TAB (Australia) and PMU (France). Customers were surveyed post-launch, with both quantitative and qualitative data being largely positive.</p>
+        </div>
+        <div class="metric-row metric-row--ruled">
+          <div class="metric metric--fixed">
+            <p class="metric__value">£4.5M Annually</p>
+            <p class="metric__label">Multiples Revenue</p>
+          </div>
+          <div class="metric">
+            <p class="metric__value">55%</p>
+            <p class="metric__label">Of customers bet on multiples regularly</p>
+          </div>
+          <div class="metric">
+            <p class="metric__value">World First</p>
+            <p class="metric__label">No other pool operator provides multiple bet types</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- REFLECTIONS -->
+      <section id="reflections" class="section" aria-labelledby="reflections-title" data-reveal>
+        <h2 id="reflections-title" class="h-section">Reflections and Learnings</h2>
+        <div class="reflections">
+          <div class="reflection">
+            <div class="reflection__title stack-12">
+              <h3 class="h-sub h-sub--primary">Agile Delivery</h3>
+              <p class="t-14 muted">I broke the designs up into three separate drops so we could start measuring the MVP’s performance and gather feedback.</p>
+            </div>
+            <blockquote class="reflection__quote panel">
+              <span class="reflection__mark" aria-hidden="true">“</span>
+              <p class="t-14 secondary">I built a strong relationship with the product manager and engineers to help create the requirements for the MVP. Together we planned how we would deliver the next iterations and improve the experience based on feedback.</p>
+              <span class="reflection__mark" aria-hidden="true">“</span>
+            </blockquote>
+          </div>
+          <div class="reflection">
+            <div class="reflection__title stack-12">
+              <h3 class="h-sub h-sub--primary">Component Consistency</h3>
+              <p class="t-14 muted">Contributed components to the design system.</p>
+            </div>
+            <blockquote class="reflection__quote panel">
+              <span class="reflection__mark" aria-hidden="true">“</span>
+              <p class="t-14 secondary">Developers did not naturally adopt the design system, so I hosted several sessions, explaining that this is where the source of truth for each component and its variations would be housed.</p>
+              <span class="reflection__mark" aria-hidden="true">“</span>
+            </blockquote>
+          </div>
+        </div>
+      </section>
+
+      <!-- NEXT STEPS -->
+      <section id="next-steps" class="section" aria-labelledby="next-title" data-reveal>
+        <h2 id="next-title" class="h-section">Next Steps</h2>
+        <div class="next-step">
+          <div class="next-step__body stack-12">
+            <h3 class="h-sub h-sub--primary nowrap">Cross-Meeting Multiples</h3>
+            <p class="t-14 muted">Several customers requested the ability to have a multiple across different meetings. Due to the nature of the pools betting platform, this is not currently possible. The next step would be to go into discovery to identify the effort and value of cross-meeting multiples, in order to get it prioritised on the development roadmap.</p>
+          </div>
+          <div class="next-step__example panel">
+            <img src="images/mx-cross-meeting.png" width="322" height="526" loading="lazy" alt="Concept betslip with a Treble across Kempton Park, Cheltenham and Haydock Park selections" />
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="site.js"></script>
 </body>
 </html>

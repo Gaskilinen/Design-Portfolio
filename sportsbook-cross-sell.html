@@ -13,163 +13,11 @@
   />
   <link rel="stylesheet" href="tokens.css" />
   <link rel="stylesheet" href="site.css" />
+  <link rel="stylesheet" href="case-study.css" />
   <script>
     if ('IntersectionObserver' in window) document.documentElement.classList.add('reveal-ready');
   </script>
   <style>
-    /* ---------- HEADER (case study variant) ---------- */
-    /* Back button and contact links both centre on y=47.5 in the 83px bar, as in Figma. */
-    .site-header--case {
-      height: 83px;
-      min-height: 0;
-      padding-top: 12px;
-      padding-bottom: 0;
-    }
-
-    .btn-secondary {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: var(--space-02);
-      /* Figma strokes sit inside the 80×36 box, so padding gives up the 1px border. */
-      padding: 7px 11px;
-      background: var(--pf-surface);
-      border: 1px solid var(--pf-action-primary);
-      border-radius: var(--radius-md);
-      font-family: var(--font-ui);
-      font-size: var(--font-size-label);
-      font-weight: 600;
-      line-height: 1.34;
-      letter-spacing: -0.065px;
-      color: var(--pf-text-strong);
-      text-decoration: none;
-      white-space: nowrap;
-      transition: background-color 0.15s ease;
-    }
-
-    .btn-secondary:hover {
-      background: var(--pf-surface-muted);
-    }
-
-    .btn-secondary__icon {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 20px;
-      height: 20px;
-    }
-
-    .btn-secondary__icon img {
-      flex: none;
-      transform: rotate(90deg);
-    }
-
-    /* ---------- LAYOUT ---------- */
-    .cs {
-      /* Left edge of the content column; carousels use it to bleed to the right edge of the screen. */
-      --col-left: calc(262px + max(0px, (100vw - 1440px) / 2));
-      display: grid;
-      grid-template-columns: 262px minmax(0, 916px) 1fr;
-      max-width: 1440px;
-      margin: 0 auto;
-      overflow-x: clip;
-    }
-
-    .side-nav {
-      position: sticky;
-      top: 83px;
-      align-self: start;
-      padding: 59px 0 var(--space-05) 60px;
-    }
-
-    .side-nav ul {
-      display: flex;
-      flex-direction: column;
-      gap: var(--space-05);
-      list-style: none;
-    }
-
-    .side-nav a {
-      display: block;
-      font-size: var(--font-size-body-sm);
-      line-height: 18px;
-      color: var(--pf-text-secondary);
-      text-decoration: none;
-    }
-
-    .side-nav a:hover {
-      text-decoration: underline;
-    }
-
-    .side-nav a[aria-current="true"] {
-      font-weight: 700;
-      color: var(--pf-text-primary);
-    }
-
-    .cs-main {
-      display: flex;
-      flex-direction: column;
-      gap: 128px;
-      min-width: 0;
-      padding: 60px 0 237px;
-    }
-
-    .cs-main [id] {
-      scroll-margin-top: 110px;
-    }
-
-    .section {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      gap: var(--space-07);
-    }
-
-    /* ---------- TYPE ---------- */
-    /* Explicit line heights match Figma's per-line heights for multi-line text. */
-    .t-13 { font-size: var(--font-size-label); line-height: 17px; }
-    .t-14 { font-size: var(--font-size-body-sm); line-height: 18px; }
-    .t-18 { font-size: var(--font-size-body); line-height: 23px; }
-
-    .h-section {
-      font-size: var(--font-size-h4);
-      font-weight: 500;
-      line-height: 33px;
-      color: var(--pf-text-strong);
-    }
-
-    .h-sub {
-      font-size: var(--font-size-body-lg);
-      font-weight: 500;
-      line-height: 26px;
-      color: var(--pf-text-strong);
-    }
-
-    .h-sub--primary { color: var(--pf-text-primary); }
-
-    .muted { color: var(--pf-text-tertiary); }
-    .secondary { color: var(--pf-text-secondary); }
-    .strong { color: var(--pf-text-strong); }
-    .bold { font-weight: 700; }
-    .w-636 { width: 636px; max-width: 100%; }
-    .w-660 { width: 660px; max-width: 100%; }
-
-    .panel {
-      background: var(--pf-surface-muted);
-      border-radius: var(--radius-md);
-    }
-
-    .stack-12 { display: flex; flex-direction: column; gap: var(--space-03); }
-    .section > .stack-12 { align-self: stretch; }
-
-    /* Chips on case study pages use DM Sans Medium 13 (homepage chips use Lato 14). */
-    .chip--label {
-      font-family: var(--font-sans);
-      font-size: var(--font-size-label);
-      line-height: 17px;
-      flex: none;
-    }
-
     .chip--pain {
       background: var(--pf-tag-pain);
       color: var(--pf-surface);
@@ -177,44 +25,6 @@
 
     .chip--business {
       background: var(--pf-tag-business);
-      color: var(--pf-text-primary);
-    }
-
-    /* ---------- METRICS ---------- */
-    .metric-row {
-      display: flex;
-      gap: var(--space-07);
-      width: 100%;
-      font-weight: 500;
-    }
-
-    .metric-row--ruled {
-      padding: var(--space-05) 0;
-      border-top: 1px solid var(--pf-border-divider);
-      border-bottom: 1px solid var(--pf-border-divider);
-    }
-
-    .metric-row .metric__value { line-height: 40px; }
-    .metric-row .metric__label { line-height: 17px; }
-    .metric-row .metric--fixed .metric__label { width: 140px; }
-
-    .metric__value--neutral { color: var(--pf-text-primary); }
-    .metric__value--negative { color: var(--pf-text-negative); }
-    .metric__value .muted { color: var(--pf-text-tertiary); }
-
-    /* ---------- OVERVIEW ---------- */
-    .overview__header {
-      display: flex;
-      flex-direction: column;
-      gap: var(--space-03);
-      width: 848px;
-      max-width: 100%;
-    }
-
-    .overview__title {
-      font-size: var(--font-size-h3);
-      font-weight: 500;
-      line-height: 40px;
       color: var(--pf-text-primary);
     }
 
@@ -245,16 +55,6 @@
       object-fit: cover;
     }
 
-    /* ---------- PROBLEM ---------- */
-    .problem-list {
-      display: flex;
-      flex-direction: column;
-      gap: var(--space-04);
-      width: 100%;
-      padding-left: 27px;
-      color: var(--pf-text-secondary);
-    }
-
     /* ---------- RESEARCH ---------- */
     .benchmark {
       display: flex;
@@ -281,8 +81,6 @@
       font-weight: 500;
       color: var(--pf-text-secondary);
     }
-
-    .stack-8 { display: flex; flex-direction: column; gap: var(--space-02); }
 
     /* ---------- STAKEHOLDERS ---------- */
     .feedback {
@@ -337,86 +135,6 @@
     .hypothesis__text {
       font-style: italic;
       font-variation-settings: "opsz" 9;
-      color: var(--pf-text-secondary);
-    }
-
-    /* ---------- CAROUSELS ---------- */
-    .carousel-head {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: var(--space-05);
-      width: 100%;
-    }
-
-    .carousel-head--center { align-items: center; }
-
-    .carousel-controls {
-      display: flex;
-      flex: none;
-      gap: var(--space-03);
-    }
-
-    .icon-btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 44px;
-      height: 36px;
-      padding: var(--space-02) var(--space-03);
-      background: var(--pf-surface);
-      border: 1px solid var(--pf-action-primary);
-      border-radius: var(--radius-md);
-      cursor: pointer;
-      transition: background-color 0.15s ease;
-    }
-
-    .icon-btn:hover:not(:disabled) { background: var(--pf-surface-muted); }
-
-    .icon-btn:disabled {
-      border-color: var(--pf-border-divider);
-      cursor: default;
-    }
-
-    /* Each button carries the enabled (dark) and disabled (grey) chevrons from Figma; flipped for direction. */
-    .icon-btn img { width: 20px; height: 20px; }
-    .icon-btn .is-off { display: none; }
-    .icon-btn:disabled .is-on { display: none; }
-    .icon-btn:disabled .is-off { display: block; }
-    .icon-btn--prev .is-on,
-    .icon-btn--next .is-off { transform: scaleX(-1); }
-
-    .carousel {
-      display: flex;
-      align-items: flex-start;
-      gap: var(--space-04);
-      width: calc(100vw - var(--col-left));
-      overflow-x: auto;
-      overscroll-behavior-x: contain;
-      scroll-padding-left: 0;
-      scrollbar-width: none;
-    }
-
-    .carousel::-webkit-scrollbar { display: none; }
-
-    .carousel:focus-visible {
-      outline-offset: 4px;
-    }
-
-    .carousel > * { flex: none; }
-
-    /* Trailing space so the last panel ends 60px from the screen edge (16px gap + 44px). */
-    .carousel::after {
-      content: "";
-      flex: none;
-      width: 44px;
-    }
-
-    .caption {
-      padding: var(--space-03);
-      background: var(--pf-surface-caption);
-      border-radius: var(--radius-md);
-      font-weight: 500;
       color: var(--pf-text-secondary);
     }
 
@@ -557,44 +275,13 @@
 
     .test__name { color: var(--pf-text-primary); }
 
-    .learnings {
-      display: flex;
-      align-items: stretch;
-      gap: var(--space-06);
-      list-style: none;
-    }
-
-    .learning {
-      display: flex;
-      flex-direction: column;
-      gap: var(--space-03);
-      padding: var(--space-04);
-      background: var(--pf-surface);
-      border-radius: var(--radius-md);
-      color: var(--pf-text-primary);
-    }
-
     .learning--3 { width: 261px; }
-
-    .learning__title {
-      display: flex;
-      align-items: center;
-      gap: var(--space-02);
-      font-weight: 700;
-      white-space: nowrap;
-    }
 
     .learning__title--top { align-items: flex-start; }
 
-    .learning__title img { flex: none; width: 20px; height: 20px; }
-
     .learning ul {
-      display: flex;
-      flex-direction: column;
-      gap: var(--space-03);
       width: 176px;
       max-width: 100%;
-      padding-left: 21px;
     }
 
     .learning--3 ul { width: 100%; }
@@ -619,144 +306,24 @@
       object-fit: cover;
     }
 
-    /* ---------- REFLECTIONS ---------- */
-    .reflections {
-      display: flex;
-      flex-direction: column;
-      gap: var(--space-07);
-      width: 100%;
-    }
-
-    .reflection {
-      display: flex;
-      align-items: center;
-      gap: var(--space-08);
-    }
-
-    .reflection__title,
-    .reflection__quote {
-      flex: 1 1 0;
-      min-width: 0;
-    }
-
-    .reflection__title .h-sub { white-space: nowrap; }
-
-    .reflection__quote {
-      display: flex;
-      gap: var(--space-06);
-      padding: var(--space-05);
-    }
-
-    .reflection__mark {
-      flex: none;
-      width: 16px;
-      font-size: var(--font-size-h2);
-      font-weight: 500;
-      line-height: 51px;
-      color: var(--pf-text-strong);
-    }
-
-    .reflection__quote p {
-      flex: 1 1 0;
-      min-width: 0;
-      color: var(--pf-text-primary);
-    }
-
     /* ---------- RESPONSIVE ---------- */
-    @media (max-width: 1100px) {
-      .cs {
-        --col-left: 40px;
-        grid-template-columns: minmax(0, 1fr);
-        padding: 0 40px;
-      }
-
-      .side-nav {
-        top: 83px;
-        z-index: 50;
-        margin: 0 -40px;
-        padding: var(--space-03) 40px;
-        background: var(--pf-surface);
-        border-bottom: 1px solid var(--pf-border-divider);
-        overflow-x: auto;
-        scrollbar-width: none;
-      }
-
-      .side-nav::-webkit-scrollbar { display: none; }
-
-      .side-nav ul {
-        flex-direction: row;
-        gap: var(--space-05);
-        width: max-content;
-      }
-
-      .side-nav a { white-space: nowrap; }
-      .side-nav br { display: none; }
-
-      .cs-main {
-        padding: var(--space-07) 0 var(--space-11);
-        gap: var(--space-09);
-      }
-
-      .cs-main [id] { scroll-margin-top: 140px; }
-
-      .carousel::after { width: 24px; }
-    }
-
     @media (max-width: 900px) {
-      .feedback,
-      .reflection {
+      .feedback {
         flex-direction: column;
         align-items: stretch;
       }
 
       .feedback__card--stakeholder { width: auto; }
 
-      .reflection { gap: var(--space-05); }
-      .reflection__title .h-sub { white-space: normal; }
-
       .pain { align-items: flex-start; flex-wrap: wrap; gap: var(--space-02) var(--space-04); }
       .pain__text--nowrap { white-space: normal; flex: 1 1 200px; }
 
-      .learnings { flex-wrap: wrap; }
-      .learning, .learning--3 { flex: 1 1 220px; width: auto; }
+      .learning--3 { flex: 1 1 220px; width: auto; }
       .learning ul { width: 100%; }
-
-      .metric-row { flex-wrap: wrap; gap: var(--space-05) var(--space-07); }
     }
 
     @media (max-width: 768px) {
-      .site-header--case {
-        height: auto;
-        padding: var(--space-05) 20px;
-      }
-
-      .cs {
-        --col-left: 20px;
-        padding: 0 20px;
-      }
-
-      .side-nav {
-        top: 0;
-        margin: 0 -20px;
-        padding: var(--space-03) 20px;
-      }
-
-      .cs-main [id] { scroll-margin-top: 70px; }
-
-      .carousel::after { width: 4px; }
-
-      .overview__title { font-size: 26px; line-height: 34px; }
-      .h-section { font-size: 22px; line-height: 29px; }
-
-      .metric-row .metric__value { font-size: 26px; line-height: 34px; }
-      .metric-row .metric--fixed .metric__label { width: auto; }
-
       .metric-row--survey { gap: var(--space-05) var(--space-06); }
-
-      .carousel-head { flex-direction: column; }
-      .carousel-head--center { flex-direction: row; }
-
-      .reflection__quote { gap: var(--space-04); }
     }
   </style>
 </head>
