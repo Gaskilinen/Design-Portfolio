@@ -38,7 +38,7 @@
     .shots img { width: 175px; height: 380px; }
 
     /* ---------- VALIDATION ---------- */
-    .interview { aspect-ratio: 1920 / 1032; }
+    .interview { aspect-ratio: 1920 / 1032; background: var(--pf-surface-muted); }
 
     .insights .learning .li-narrow { max-width: 203px; }   /* Figma: 224px list incl. 21px indent */
 
@@ -280,10 +280,12 @@
       <section id="validation" class="section" aria-labelledby="validation-title" data-reveal>
         <div class="stack-12">
           <h2 id="validation-title" class="h-section">Validation</h2>
-          <p class="t-14 muted w-636">Eight customer interviews were conducted with Tote customers. They were shown a beta build and tasked with betting on a multiple of their choosing.</p>
+          <p id="validation-intro" class="t-14 muted w-636">Eight customer interviews were conducted with Tote customers. They were shown a beta build and tasked with betting on a multiple of their choosing.</p>
         </div>
 
-        <img class="interview" src="images/mx-interview.webp" width="916" height="492" loading="lazy" alt="Screen recording from a customer interview: the participant, on camera in the corner, uses the Tote racecards page with two selections in the betslip" />
+        <video class="interview" controls playsinline preload="none" poster="images/mx-interview-poster.webp" width="916" height="492" aria-label="Customer interview recording: the participant, on camera in the corner, uses the Tote racecards page with two selections in the betslip" aria-describedby="validation-intro">
+          <source src="media/multiples-interview.mp4" type="video/mp4" />
+        </video>
 
         <div class="decisions">
           <h3 class="h-sub">Interview Insights</h3>
